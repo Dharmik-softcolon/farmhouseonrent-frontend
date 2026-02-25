@@ -89,10 +89,10 @@ const Footer = () => {
                             <p className="text-xs text-gray-500 mb-2">Coming Soon</p>
                             <div className="flex gap-2">
                                 <div className="bg-gray-800 rounded-lg px-3 py-2 text-[10px]">
-                                    <span className="text-gray-500">▶</span> Google Play
+                                    <span className="text-gray-500"></span> Google Play
                                 </div>
                                 <div className="bg-gray-800 rounded-lg px-3 py-2 text-[10px]">
-                                    <span className="text-gray-500">🍎</span> App Store
+                                    <span className="text-gray-500"></span> App Store
                                 </div>
                             </div>
                         </div>

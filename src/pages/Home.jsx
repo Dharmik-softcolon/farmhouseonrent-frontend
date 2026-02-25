@@ -6,7 +6,7 @@ import FarmhouseCard from '../components/FarmhouseCard';
 import Spinner from '../components/Spinner';
 import {
     FiSearch, FiMapPin, FiUsers, FiHome, FiArrowRight,
-    FiStar, FiShield, FiDollarSign, FiSmartphone, FiChevronDown
+    FiStar, FiChevronDown
 } from 'react-icons/fi';
 
 import posterImage from '../assets/image/poster.jpg';
@@ -198,7 +198,7 @@ const Home = () => {
                                 {[
                                     { icon: FiHome, value: `${farmhouses.length}+`, label: t('hero_stats_farmhouses') },
                                     { icon: FiMapPin, value: `${cities.length}+`, label: t('hero_stats_cities') },
-                                    { icon: FiUsers, value: '500+', label: t('hero_stats_guests') },
+                                    { icon: FiUsers, value: '25+', label: t('hero_stats_guests') },
                                     { icon: FiStar, value: '4.8', label: 'Rating' },
                                 ].map((stat, i) => (
                                     <div key={i} className="text-center">
@@ -253,7 +253,7 @@ const Home = () => {
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                🏙️ {t('filter_city')}
+                                 {t('filter_city')}
                             </h2>
                         </div>
 
@@ -284,7 +284,7 @@ const Home = () => {
                         <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                    🌟 Featured Farmhouses
+                                    Featured Farmhouses
                                 </h2>
                                 <p className="text-gray-500 text-sm mt-1">
                                     Handpicked properties for the perfect getaway
@@ -327,108 +327,111 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* ── HOW IT WORKS ── */}
+                {/* ── CUSTOMER REVIEWS ── */}
                 <section className="bg-gray-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
                         <div className="text-center mb-10">
+                            <span className="inline-block bg-primary-50 text-primary-600 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+                                Guest Testimonials
+                            </span>
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                                How It Works
+                                What Our Guests Say
                             </h2>
                             <p className="text-gray-500 text-sm max-w-xl mx-auto">
-                                Book your dream farmhouse in 3 simple steps
+                                Real experiences from real guests who made unforgettable memories
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 {
-                                    step: '01',
-                                    icon: <FiSearch className="w-7 h-7" />,
-                                    title: 'Search & Explore',
-                                    desc: 'Browse our curated collection of premium farmhouses. Filter by city, price, and facilities.',
-                                    color: 'bg-blue-50 text-blue-600'
+                                    name: 'Raj Timbadiya',
+                                    location: 'Surat',
+                                    avatar: 'ST',
+                                    rating: 5,
+                                    date: 'July 2025',
+                                    review: 'Found this farmhouse for our corporate team outing. The team had a blast! Great amenities, fast response on WhatsApp, and the pricing was well within budget. A truly seamless experience from start to finish.',
+                                    tag: 'Corporate Outing'
                                 },
                                 {
-                                    step: '02',
-                                    icon: <FiSmartphone className="w-7 h-7" />,
-                                    title: 'Submit Inquiry',
-                                    desc: 'Fill in your details and preferred date. Connect instantly via WhatsApp for quick confirmation.',
-                                    color: 'bg-green-50 text-green-600'
+                                    name: 'Savan Parvadiya',
+                                    location: 'Surat',
+                                    avatar: 'SP',
+                                    rating: 4,
+                                    date: 'January 2026',
+                                    review: 'Very good farmhouse overall. The kids had a great time in the pool and open grounds. Booking was easy and the property manager was responsive. Small suggestion — a BBQ setup would make it even better!',
+                                    tag: 'Family Trip'
                                 },
                                 {
-                                    step: '03',
-                                    icon: <FiHome className="w-7 h-7" />,
-                                    title: 'Enjoy Your Stay',
-                                    desc: 'Visit the farmhouse and create beautiful memories with your family and friends.',
-                                    color: 'bg-purple-50 text-purple-600'
-                                }
-                            ].map((item, i) => (
-                                <div key={i} className="relative text-center group">
-                                    {i < 2 && (
-                                        <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gray-200 z-0">
-                                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-gray-300 rounded-full" />
-                                        </div>
-                                    )}
-                                    <div className="relative z-10">
-                                        <span className="inline-block text-xs font-bold text-gray-300 mb-2">STEP {item.step}</span>
-                                        <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mx-auto mb-3 
-                                  group-hover:scale-110 transition-transform shadow-sm`}>
-                                            {item.icon}
-                                        </div>
-                                        <h3 className="font-bold text-gray-900 mb-1.5">{item.title}</h3>
-                                        <p className="text-sm text-gray-600 max-w-xs mx-auto leading-relaxed">{item.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── WHY CHOOSE US ── */}
-                <section className="bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-                        <div className="text-center mb-10">
-                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                                ✨ Why Choose FarmStay?
-                            </h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                            {[
-                                {
-                                    emoji: '🏡',
-                                    title: 'Verified Properties',
-                                    desc: 'All farmhouses are personally verified for quality, safety, and hygiene.'
+                                    name: 'Kushik Khunt',
+                                    location: 'Surat',
+                                    avatar: 'KK',
+                                    rating: 5,
+                                    date: 'February 2024',
+                                    review: 'This was our second booking through FarmStay and it was just as amazing. Love how they verify each property — you know exactly what to expect. The photos matched perfectly. FarmStay is our go-to for every getaway!',
+                                    tag: 'Weekend Escape'
                                 },
-                                {
-                                    emoji: '💰',
-                                    title: 'Best Prices',
-                                    desc: 'Transparent pricing with no hidden charges. Weekday discounts available.'
-                                },
-                                {
-                                    emoji: '📱',
-                                    title: 'Instant Booking',
-                                    desc: 'Quick inquiry and instant WhatsApp confirmation. No waiting.'
-                                },
-                                {
-                                    emoji: '⭐',
-                                    title: 'Real Reviews',
-                                    desc: 'Genuine reviews with photos from real guests who visited.'
-                                },
-                            ].map((item, i) => (
+                            ].map((review, i) => (
                                 <div
                                     key={i}
-                                    className="bg-gray-50 text-center p-5 rounded-2xl border border-gray-100
-                           hover:shadow-lg hover:border-primary-200 transition-all group"
+                                    className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm
+                                               hover:shadow-md hover:border-primary-100 transition-all flex flex-col gap-4"
                                 >
-                                    <div className="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center
-                               mx-auto mb-3 group-hover:scale-110 transition-transform">
-                                        <span className="text-xl">{item.emoji}</span>
+                                    {/* Stars */}
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: 5 }).map((_, s) => (
+                                            <FiStar
+                                                key={s}
+                                                className={`w-4 h-4 ${s < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`}
+                                                style={{ fill: s < review.rating ? '#facc15' : 'none' }}
+                                            />
+                                        ))}
+                                        <span className="ml-auto text-[10px] font-medium text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">
+                                            {review.tag}
+                                        </span>
                                     </div>
-                                    <h3 className="font-bold text-gray-900 mb-1.5 text-sm">{item.title}</h3>
-                                    <p className="text-xs text-gray-600 leading-relaxed">{item.desc}</p>
+
+                                    {/* Review Text */}
+                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">
+                                        "{review.review}"
+                                    </p>
+
+                                    {/* Reviewer Info */}
+                                    <div className="flex items-center gap-3 pt-3 border-t border-gray-50">
+                                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-primary-700
+                                                        flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                            {review.avatar}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-semibold text-gray-900 truncate">{review.name}</p>
+                                            <p className="text-xs text-gray-400">{review.location} · {review.date}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* Bottom Rating Summary */}
+                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                            <div className="text-center">
+                                <p className="text-4xl font-extrabold text-gray-900">4.9</p>
+                                {/*<div className="flex items-center justify-center gap-0.5 my-1">*/}
+                                {/*    {Array.from({ length: 5 }).map((_, i) => (*/}
+                                {/*        <FiStar key={i} className="w-4 h-4 text-yellow-400" style={{ fill: '#facc15' }} />*/}
+                                {/*    ))}*/}
+                                {/*</div>*/}
+                                <p className="text-xs text-gray-400 font-medium">Average Rating</p>
+                            </div>
+                            <div className="w-px h-12 bg-gray-100 hidden sm:block" />
+                            <div className="text-center">
+                                <p className="text-4xl font-extrabold text-gray-900">25+</p>
+                                <p className="text-xs text-gray-400 font-medium mt-1">Happy Guests</p>
+                            </div>
+                            <div className="w-px h-12 bg-gray-100 hidden sm:block" />
+                            <div className="text-center">
+                                <p className="text-4xl font-extrabold text-gray-900">98%</p>
+                                <p className="text-xs text-gray-400 font-medium mt-1">Would Recommend</p>
+                            </div>
                         </div>
                     </div>
                 </section>
