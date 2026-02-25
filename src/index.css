@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-gray-50 text-gray-900 font-sans;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-6 rounded-xl
+        transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98];
+    }
+
+    .btn-secondary {
+        @apply bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2.5 px-6 rounded-xl
+        border border-gray-300 transition-all duration-200 hover:shadow-sm;
+    }
+
+    .btn-accent {
+        @apply bg-accent-500 hover:bg-accent-600 text-white font-semibold py-2.5 px-6 rounded-xl
+        transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98];
+    }
+
+    .btn-danger {
+        @apply bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg
+        transition-all duration-200;
+    }
+
+    .input-field {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500
+        focus:border-primary-500 outline-none transition-all duration-200 bg-white;
+    }
+
+    .card {
+        @apply bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100;
+    }
+
+    .badge {
+        @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+    }
+
+    .gradient-hero {
+        @apply bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900;
+    }
+
+    .glass-effect {
+        @apply bg-white/80 backdrop-blur-lg border border-white/20;
+    }
+}
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Add these INSIDE the existing @layer utilities block or at the bottom */
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Smooth parallax performance */
+    .will-change-transform {
+        will-change: transform;
+    }
+
+    .will-change-opacity {
+        will-change: opacity;
+    }
+}
+
+/* Ensure fixed hero doesn't overlap navbar */
+nav.sticky {
+    z-index: 50 !important;
+}
