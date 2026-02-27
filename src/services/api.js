@@ -35,6 +35,7 @@ export const farmhouseAPI = {
     delete: (id) => api.delete(`/farmhouses/${id}`),
     getCities: () => api.get('/farmhouses/cities/list'),
     getSubLocations: (city) => api.get('/farmhouses/sublocations/list', { params: { city } }),
+    bulkCreate: (farms) => api.post('/farmhouses/bulk', { farms }),
 };
 
 export const bookingAPI = {

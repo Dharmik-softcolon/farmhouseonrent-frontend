@@ -12,6 +12,7 @@ import AddFarmhouse from './pages/admin/AddFarmhouse';
 import EditFarmhouse from './pages/admin/EditFarmhouse';
 import BookingLeads from './pages/admin/BookingLeads';
 import ManageReviews from './pages/admin/ManageReviews';
+import BulkUploadFarmhouse from './pages/admin/BulkUploadFarmhouse';
 
 function App() {
     return (
@@ -37,6 +38,9 @@ function App() {
                     } />
                     <Route path="/admin/reviews" element={
                         <ProtectedRoute><ManageReviews /></ProtectedRoute>
+                    } />
+                    <Route path="/admin/bulk-upload" element={
+                        <ProtectedRoute><BulkUploadFarmhouse /></ProtectedRoute>
                     } />
                     <Route path="*" element={<NotFound />} />
                 </Routes>

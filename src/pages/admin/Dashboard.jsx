@@ -6,7 +6,7 @@ import Spinner from '../../components/Spinner';
 import toast from 'react-hot-toast';
 import {
     FiHome, FiUsers, FiPlusCircle, FiEdit, FiTrash2,
-    FiEye, FiGrid, FiStar
+    FiEye, FiGrid, FiStar, FiUploadCloud
 } from 'react-icons/fi';
 
 const Dashboard = () => {
@@ -63,10 +63,17 @@ const Dashboard = () => {
                     <FiGrid className="w-6 h-6 text-primary-600" />
                     {t('admin_dashboard_title')}
                 </h1>
-                <Link to="/admin/add-farmhouse" className="btn-primary flex items-center gap-2">
-                    <FiPlusCircle className="w-4 h-4" />
-                    {t('admin_add_new')}
-                </Link>
+                <div className="flex items-center gap-2 flex-wrap">
+                    <Link to="/admin/bulk-upload"
+                        className="btn-secondary flex items-center gap-2 text-sm">
+                        <FiUploadCloud className="w-4 h-4" />
+                        Bulk Upload CSV
+                    </Link>
+                    <Link to="/admin/add-farmhouse" className="btn-primary flex items-center gap-2">
+                        <FiPlusCircle className="w-4 h-4" />
+                        {t('admin_add_new')}
+                    </Link>
+                </div>
             </div>
 
             {/* Stats Grid */}
