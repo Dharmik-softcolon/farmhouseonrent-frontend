@@ -82,7 +82,7 @@ const Home = () => {
             {/* ══════════════════════════════════════════
           STICKY HERO — FIXED BACKGROUND
          ══════════════════════════════════════════ */}
-            <div ref={heroRef} className="relative h-[55vh] sm:h-[60vh] lg:h-[65vh]">
+            <div ref={heroRef} className="relative h-[60vh] sm:h-[60vh] lg:h-[65vh]">
                 {/* Fixed Background Layer */}
                 <div className="fixed top-0 left-0 right-0 h-[65vh] sm:h-[70vh] lg:h-[75vh] -z-10 overflow-hidden">
                     {/* Background Image with Parallax Scale */}
@@ -150,63 +150,61 @@ const Home = () => {
 
                             {/* ── SEARCH BAR ── */}
                             <form onSubmit={handleSearch} className="mb-5">
-                                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-1.5 sm:p-2
-                              flex flex-col sm:flex-row gap-1.5 sm:gap-0 max-w-xl lg:max-w-2xl">
-                                    {/* City */}
-                                    <div className="flex items-center gap-2 px-3 sm:border-r border-gray-200 flex-shrink-0">
-                                        <FiMapPin className="w-4 h-4 text-primary-600 flex-shrink-0" />
-                                        <select
-                                            value={selectedCity}
-                                            onChange={e => { setSelectedCity(e.target.value); setSelectedSubLocation(''); }}
-                                            className="bg-transparent py-2.5 sm:py-2 outline-none text-gray-700 text-sm font-medium
-                               cursor-pointer min-w-[100px] sm:min-w-[120px]"
-                                        >
-                                            <option value="">{t('filter_all_cities')}</option>
-                                            {cities.map(city => (
-                                                <option key={city} value={city}>{city}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {/* Sub-location (Surat only) */}
-                                    {selectedCity.toLowerCase() === 'surat' && subLocations.length > 0 && (
-                                        <div className="flex items-center gap-2 px-3 sm:border-r border-gray-200 flex-shrink-0">
+                                {/* Mobile: fully stacked card */}
+                                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden max-w-xl lg:max-w-2xl">
+                                    {/* Row 1: City + (optional) sub-location */}
+                                    <div className="flex items-center border-b border-gray-100">
+                                        <div className="flex items-center gap-2 px-4 py-3 flex-1 border-r border-gray-100">
+                                            <FiMapPin className="w-4 h-4 text-primary-600 flex-shrink-0" />
                                             <select
-                                                value={selectedSubLocation}
-                                                onChange={e => setSelectedSubLocation(e.target.value)}
-                                                className="bg-transparent py-2.5 sm:py-2 outline-none text-gray-700 text-sm font-medium
-                               cursor-pointer min-w-[90px] sm:min-w-[110px]"
+                                                value={selectedCity}
+                                                onChange={e => { setSelectedCity(e.target.value); setSelectedSubLocation(''); }}
+                                                className="bg-transparent outline-none text-gray-700 text-sm font-medium cursor-pointer w-full"
                                             >
-                                                <option value="">All areas</option>
-                                                {subLocations.map(s => (
-                                                    <option key={s} value={s}>{s}</option>
+                                                <option value="">{t('filter_all_cities')}</option>
+                                                {cities.map(city => (
+                                                    <option key={city} value={city}>{city}</option>
                                                 ))}
                                             </select>
                                         </div>
-                                    )}
-
-                                    {/* Search Input */}
-                                    <div className="flex items-center flex-1 gap-2 px-3">
-                                        <FiSearch className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                                        <input
-                                            type="text"
-                                            value={searchQuery}
-                                            onChange={e => setSearchQuery(e.target.value)}
-                                            placeholder={t('hero_search_placeholder')}
-                                            className="w-full py-2.5 sm:py-2 outline-none text-gray-800 text-sm placeholder:text-gray-400"
-                                        />
+                                        {/* Sub-location (Surat only) */}
+                                        {selectedCity.toLowerCase() === 'surat' && subLocations.length > 0 && (
+                                            <div className="flex items-center gap-2 px-4 py-3 flex-1">
+                                                <select
+                                                    value={selectedSubLocation}
+                                                    onChange={e => setSelectedSubLocation(e.target.value)}
+                                                    className="bg-transparent outline-none text-gray-700 text-sm font-medium cursor-pointer w-full"
+                                                >
+                                                    <option value="">All areas</option>
+                                                    {subLocations.map(s => (
+                                                        <option key={s} value={s}>{s}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
                                     </div>
-
-                                    {/* Button */}
-                                    <button
-                                        type="submit"
-                                        className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-5
-                             rounded-xl transition-all duration-200 flex items-center justify-center gap-2
-                             shadow-lg shadow-primary-600/30 hover:shadow-xl active:scale-[0.98] flex-shrink-0 text-sm"
-                                    >
-                                        <FiSearch className="w-4 h-4" />
-                                        <span>{t('hero_search_btn')}</span>
-                                    </button>
+                                    {/* Row 2: Search input + button */}
+                                    <div className="flex items-center">
+                                        <div className="flex items-center flex-1 gap-2 px-4 py-3">
+                                            <FiSearch className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                            <input
+                                                type="text"
+                                                value={searchQuery}
+                                                onChange={e => setSearchQuery(e.target.value)}
+                                                placeholder={t('hero_search_placeholder')}
+                                                className="w-full outline-none text-gray-800 text-sm placeholder:text-gray-400 bg-transparent"
+                                            />
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-5
+                                             transition-all duration-200 flex items-center gap-2
+                                             shadow-none active:scale-[0.98] flex-shrink-0 text-sm"
+                                        >
+                                            <FiSearch className="w-4 h-4" />
+                                            <span className="hidden sm:inline">{t('hero_search_btn')}</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
 
@@ -403,14 +401,32 @@ const Home = () => {
 
                 {/* ── POPULAR CITIES ── */}
                 {cities.length > 0 && (
-                    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                        <div className="flex items-center justify-between mb-5">
+                    <section className="py-8 sm:py-10">
+                        <div className="flex items-center justify-between mb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                 {t('filter_city')}
+                                {t('filter_city')}
                             </h2>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                        {/* Mobile: horizontal scroll pills | Desktop: grid */}
+                        <div className="sm:hidden flex gap-3 px-4 overflow-x-auto scrollbar-hide pb-1">
+                            {cities.map(city => (
+                                <button
+                                    key={city}
+                                    onClick={() => navigate(`/farmhouses?city=${encodeURIComponent(city)}`)}
+                                    className="flex-shrink-0 flex flex-col items-center gap-1.5"
+                                >
+                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700
+                                        flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                                        <FiMapPin className="w-6 h-6 text-white" />
+                                    </div>
+                                    <span className="text-xs font-semibold text-gray-700 text-center whitespace-nowrap">{city}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Desktop grid */}
+                        <div className="hidden sm:grid max-w-7xl mx-auto px-6 lg:px-8 grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                             {cities.map(city => (
                                 <button
                                     key={city}
@@ -462,12 +478,36 @@ const Home = () => {
                             </div>
                         ) : (
                             <>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Mobile: horizontal snap carousel */}
+                                <div className="sm:hidden -mx-4 px-4">
+                                    <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-scroll-x pb-2">
+                                        {farmhouses.map(fh => (
+                                            <div key={fh._id} className="flex-shrink-0 w-[73vw] snap-start">
+                                                <FarmhouseCard farmhouse={fh} compact={true} />
+                                            </div>
+                                        ))}
+                                        {/* See all card */}
+                                        <div className="flex-shrink-0 w-[40vw] snap-start">
+                                            <button
+                                                onClick={() => navigate('/farmhouses')}
+                                                className="h-full min-h-[200px] w-full rounded-2xl border-2 border-dashed border-primary-200
+                                                    flex flex-col items-center justify-center gap-2 text-primary-600
+                                                    bg-primary-50 active:bg-primary-100 transition-colors"
+                                            >
+                                                <FiArrowRight className="w-7 h-7" />
+                                                <span className="text-sm font-semibold text-center px-2">View All</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Desktop: grid layout */}
+                                <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {farmhouses.map(fh => (
                                         <FarmhouseCard key={fh._id} farmhouse={fh} />
                                     ))}
                                 </div>
-                                <div className="sm:hidden mt-6 text-center">
+                                <div className="hidden sm:flex mt-6 justify-center">
                                     <button
                                         onClick={() => navigate('/farmhouses')}
                                         className="btn-primary inline-flex items-center gap-2"

@@ -126,3 +126,38 @@ nav.sticky {
 .animate-marquee:hover {
     animation-play-state: paused;
 }
+
+/* ══ MOBILE UTILITIES ══ */
+
+/* Bottom sheet slide-up animation */
+@keyframes slideUpSheet {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+.animate-slide-up-sheet {
+    animation: slideUpSheet 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* Backdrop fade */
+@keyframes fadeInBackdrop {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.animate-fade-in-backdrop {
+    animation: fadeInBackdrop 0.2s ease forwards;
+}
+
+/* Disable iOS blue tap highlight on all interactive elements */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile sticky CTA bar shadow */
+.mobile-cta-shadow {
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Safe-area padding for notched phones (iPhone X+) */
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}

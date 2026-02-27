@@ -7,8 +7,9 @@ const Footer = () => {
     const { t } = useLanguage();
 
     return (
-        <footer className="bg-gray-900 text-gray-300">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <footer className="bg-gray-900 text-gray-300 pb-20 md:pb-0">
+            {/* Desktop: 4-col grid */}
+            <div className="hidden sm:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div className="lg:col-span-1">
@@ -103,6 +104,57 @@ const Footer = () => {
                 <div className="border-t border-gray-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
                     <p className="text-xs text-gray-500">{t('footer_rights')}</p>
                     <p className="text-xs text-gray-500">{t('footer_made_with')}</p>
+                </div>
+            </div>
+
+            {/* Mobile: compact 2-col layout */}
+            <div className="sm:hidden px-5 pt-8 pb-4">
+                <div className="mb-5">
+                    <Logo size="md" white={true} />
+                    <p className="text-xs text-gray-400 mt-2 leading-relaxed">{t('footer_about_text')}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="text-white font-semibold text-sm mb-2">{t('footer_quick_links')}</h4>
+                        <ul className="space-y-1.5 text-xs">
+                            <li><Link to="/" className="hover:text-primary-400 transition-colors">{t('nav_home')}</Link></li>
+                            <li><Link to="/farmhouses" className="hover:text-primary-400 transition-colors">{t('footer_all_farmhouses')}</Link></li>
+                        </ul>
+                    </div>
+                    {/* Contact */}
+                    <div>
+                        <h4 className="text-white font-semibold text-sm mb-2">{t('footer_contact_us')}</h4>
+                        <ul className="space-y-1.5 text-xs">
+                            <li>
+                                <a href="mailto:dharmikg2208@gmail.com" className="hover:text-primary-400 transition-colors flex items-center gap-1">
+                                    <FiMail className="w-3 h-3 text-primary-400" /> Mail us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:+916356079603" className="hover:text-primary-400 transition-colors flex items-center gap-1">
+                                    <FiPhone className="w-3 h-3 text-primary-400" /> Call us
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {/* Social */}
+                <div className="flex gap-3 mb-5">
+                    {[
+                        { Icon: FiInstagram, href: 'https://instagram.com', color: 'hover:bg-pink-600' },
+                        { Icon: FiFacebook, href: 'https://facebook.com', color: 'hover:bg-blue-600' },
+                        { Icon: FiTwitter, href: 'https://twitter.com', color: 'hover:bg-sky-500' },
+                        { Icon: FiYoutube, href: 'https://youtube.com', color: 'hover:bg-red-600' },
+                    ].map(({ Icon, href, color }, i) => (
+                        <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+                            className={`w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center ${color} transition-colors`}>
+                            <Icon className="w-4 h-4" />
+                        </a>
+                    ))}
+                </div>
+                <div className="border-t border-gray-800 pt-4">
+                    <p className="text-[10px] text-gray-500 text-center">{t('footer_rights')}</p>
                 </div>
             </div>
         </footer>

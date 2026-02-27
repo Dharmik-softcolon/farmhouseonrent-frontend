@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useLanguage from '../hooks/useLanguage';
 import { farmhouseAPI } from '../services/api';
-import { FiFilter, FiX, FiChevronDown } from 'react-icons/fi';
+import { FiFilter, FiX, FiChevronDown, FiCheck } from 'react-icons/fi';
 
 const FACILITY_OPTIONS = [
     'pool','garden','ac','kitchen','parking','wifi',
@@ -14,18 +14,14 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
     const [cities, setCities] = useState([]);
     const [subLocations, setSubLocations] = useState([]);
     const [showFacilities, setShowFacilities] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [sheetOpen, setSheetOpen] = useState(false); // mobile bottom-sheet
 
-    // ── Local draft state for text/number inputs ─────────────────────────────
-    // These don't propagate to parent until "Apply Filters" is clicked,
-    // which prevents React from re-mounting inputs on every keystroke.
     const [draft, setDraft] = useState({
         minPrice: filters.minPrice || '',
         maxPrice: filters.maxPrice || '',
         guests:   filters.guests   || '',
     });
 
-    // Keep draft in sync if filters are cleared externally (Clear All)
     useEffect(() => {
         setDraft({
             minPrice: filters.minPrice || '',
@@ -40,7 +36,6 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
             .catch(() => {});
     }, []);
 
-    // Fetch sub-locations when city = Surat
     useEffect(() => {
         if (filters.city && filters.city.toLowerCase() === 'surat') {
             farmhouseAPI.getSubLocations('Surat')
@@ -54,12 +49,10 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
         }
     }, [filters.city]);
 
-    // For selects + facilities — apply immediately to parent state
     const handleSelectChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-    // For number/text inputs — update only local draft
     const handleDraftChange = (key, value) => {
         setDraft(prev => ({ ...prev, [key]: value }));
     };
@@ -74,7 +67,6 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
         });
     };
 
-    // Flush draft into parent filters then call onApply with the merged result
     const handleApply = () => {
         const merged = {
             ...filters,
@@ -84,20 +76,27 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
         };
         setFilters(merged);
         onApply(merged);
+        setSheetOpen(false);
     };
 
     const clearAll = () => {
         setDraft({ minPrice: '', maxPrice: '', guests: '' });
         setFilters({ city: '', subLocation: '', minPrice: '', maxPrice: '', guests: '', sort: 'newest', facilities: '' });
         onApply();
+        setSheetOpen(false);
     };
 
     const selectedFacilities = filters.facilities ? filters.facilities.split(',').filter(Boolean) : [];
     const isSurat = filters.city && filters.city.toLowerCase() === 'surat';
     const hasActiveFilters = filters.city || filters.subLocation || draft.minPrice || draft.maxPrice || draft.guests || filters.facilities;
+    const activeCount = [
+        filters.city, filters.subLocation, draft.minPrice, draft.maxPrice, draft.guests,
+        ...selectedFacilities
+    ].filter(Boolean).length;
 
+    /* ── Filter body JSX (shared between desktop and mobile sheet) ── */
     const filterBody = (
-        <div className="space-y-4">
+        <div className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                 {/* City */}
                 <div>
@@ -133,7 +132,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     </div>
                 )}
 
-                {/* Min Price — local draft, applied only on Apply click */}
+                {/* Min Price */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_min_price')}</label>
                     <input
@@ -147,7 +146,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     />
                 </div>
 
-                {/* Max Price — local draft */}
+                {/* Max Price */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_max_price')}</label>
                     <input
@@ -161,7 +160,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     />
                 </div>
 
-                {/* Guests — local draft */}
+                {/* Guests */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_guests')}</label>
                     <input
@@ -210,12 +209,13 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                             <button
                                 key={fac}
                                 onClick={() => toggleFacility(fac)}
-                                className={`badge cursor-pointer transition-all text-xs py-1.5 px-3
+                                className={`badge cursor-pointer transition-all text-xs py-1.5 px-3 flex items-center gap-1
                   ${selectedFacilities.includes(fac)
                                     ? 'bg-primary-600 text-white shadow-sm'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             >
+                                {selectedFacilities.includes(fac) && <FiCheck className="w-3 h-3" />}
                                 {t(`facility_${fac}`)}
                             </button>
                         ))}
@@ -239,23 +239,72 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
     );
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
-            {/* Mobile Toggle */}
-            <button
-                onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden flex items-center gap-2 w-full text-sm font-semibold text-gray-700 mb-2"
-            >
-                <FiFilter className="w-4 h-4" />
-                {t('filter_title')}
-                {hasActiveFilters && <span className="badge bg-primary-100 text-primary-700 text-xs">Active</span>}
-                <FiChevronDown className={`w-4 h-4 ml-auto transition-transform ${mobileOpen ? 'rotate-180' : ''}`} />
-            </button>
+        <>
+            {/* ── MOBILE: trigger button ── */}
+            <div className="lg:hidden">
+                <button
+                    onClick={() => setSheetOpen(true)}
+                    className="w-full flex items-center justify-between gap-3 bg-white border border-gray-200
+                        rounded-2xl px-4 py-3.5 shadow-sm active:bg-gray-50 transition-colors"
+                >
+                    <div className="flex items-center gap-2">
+                        <div className={`p-1.5 rounded-lg ${hasActiveFilters ? 'bg-primary-100' : 'bg-gray-100'}`}>
+                            <FiFilter className={`w-4 h-4 ${hasActiveFilters ? 'text-primary-600' : 'text-gray-600'}`} />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-800">{t('filter_title')}</span>
+                        {activeCount > 0 && (
+                            <span className="badge bg-primary-600 text-white text-[10px] py-0.5 px-2">
+                                {activeCount} active
+                            </span>
+                        )}
+                    </div>
+                    <FiChevronDown className="w-4 h-4 text-gray-400" />
+                </button>
+            </div>
 
-            {/* Desktop: always show, Mobile: toggle */}
-            <div className={`${mobileOpen ? 'block' : 'hidden'} lg:block`}>
+            {/* ── MOBILE BOTTOM SHEET ── */}
+            {sheetOpen && (
+                <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end">
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/40 animate-fade-in-backdrop"
+                        onClick={() => setSheetOpen(false)}
+                    />
+                    {/* Sheet */}
+                    <div className="relative bg-white rounded-t-3xl animate-slide-up-sheet max-h-[85vh] flex flex-col">
+                        {/* Drag handle */}
+                        <div className="flex justify-center pt-3 pb-1">
+                            <div className="w-10 h-1 bg-gray-300 rounded-full" />
+                        </div>
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+                            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                <FiFilter className="w-4 h-4 text-primary-600" />
+                                {t('filter_title')}
+                                {activeCount > 0 && (
+                                    <span className="badge bg-primary-100 text-primary-700 text-xs">{activeCount}</span>
+                                )}
+                            </h3>
+                            <button
+                                onClick={() => setSheetOpen(false)}
+                                className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                            >
+                                <FiX className="w-5 h-5 text-gray-500" />
+                            </button>
+                        </div>
+                        {/* Scrollable content */}
+                        <div className="overflow-y-auto flex-1 px-5 py-4">
+                            {filterBody}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── DESKTOP: always visible panel ── */}
+            <div className="hidden lg:block bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 {filterBody}
             </div>
-        </div>
+        </>
     );
 };
 
