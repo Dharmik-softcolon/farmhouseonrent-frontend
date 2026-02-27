@@ -16,13 +16,31 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
     const [showFacilities, setShowFacilities] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    // ── Local draft state for text/number inputs ─────────────────────────────
+    // These don't propagate to parent until "Apply Filters" is clicked,
+    // which prevents React from re-mounting inputs on every keystroke.
+    const [draft, setDraft] = useState({
+        minPrice: filters.minPrice || '',
+        maxPrice: filters.maxPrice || '',
+        guests:   filters.guests   || '',
+    });
+
+    // Keep draft in sync if filters are cleared externally (Clear All)
+    useEffect(() => {
+        setDraft({
+            minPrice: filters.minPrice || '',
+            maxPrice: filters.maxPrice || '',
+            guests:   filters.guests   || '',
+        });
+    }, [filters.minPrice, filters.maxPrice, filters.guests]);
+
     useEffect(() => {
         farmhouseAPI.getCities()
             .then(res => setCities(res.data.data || []))
             .catch(() => {});
     }, []);
 
-    // Fetch sub-locations whenever city changes to Surat
+    // Fetch sub-locations when city = Surat
     useEffect(() => {
         if (filters.city && filters.city.toLowerCase() === 'surat') {
             farmhouseAPI.getSubLocations('Surat')
@@ -30,15 +48,20 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                 .catch(() => setSubLocations([]));
         } else {
             setSubLocations([]);
-            // Clear subLocation filter when switching away from Surat
             if (filters.subLocation) {
                 setFilters(prev => ({ ...prev, subLocation: '' }));
             }
         }
     }, [filters.city]);
 
-    const handleChange = (key, value) => {
+    // For selects + facilities — apply immediately to parent state
+    const handleSelectChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    // For number/text inputs — update only local draft
+    const handleDraftChange = (key, value) => {
+        setDraft(prev => ({ ...prev, [key]: value }));
     };
 
     const toggleFacility = (fac) => {
@@ -51,17 +74,29 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
         });
     };
 
-    const selectedFacilities = filters.facilities ? filters.facilities.split(',').filter(Boolean) : [];
+    // Flush draft into parent filters then call onApply with the merged result
+    const handleApply = () => {
+        const merged = {
+            ...filters,
+            minPrice: draft.minPrice,
+            maxPrice: draft.maxPrice,
+            guests:   draft.guests,
+        };
+        setFilters(merged);
+        onApply(merged);
+    };
 
     const clearAll = () => {
+        setDraft({ minPrice: '', maxPrice: '', guests: '' });
         setFilters({ city: '', subLocation: '', minPrice: '', maxPrice: '', guests: '', sort: 'newest', facilities: '' });
         onApply();
     };
 
+    const selectedFacilities = filters.facilities ? filters.facilities.split(',').filter(Boolean) : [];
     const isSurat = filters.city && filters.city.toLowerCase() === 'surat';
-    const hasActiveFilters = filters.city || filters.subLocation || filters.minPrice || filters.maxPrice || filters.guests || filters.facilities;
+    const hasActiveFilters = filters.city || filters.subLocation || draft.minPrice || draft.maxPrice || draft.guests || filters.facilities;
 
-    const FilterContent = () => (
+    const filterBody = (
         <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                 {/* City */}
@@ -69,7 +104,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_city')}</label>
                     <select
                         value={filters.city}
-                        onChange={e => handleChange('city', e.target.value)}
+                        onChange={e => handleSelectChange('city', e.target.value)}
                         className="input-field text-sm py-2.5"
                     >
                         <option value="">{t('filter_all_cities')}</option>
@@ -87,7 +122,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                         </label>
                         <select
                             value={filters.subLocation || ''}
-                            onChange={e => handleChange('subLocation', e.target.value)}
+                            onChange={e => handleSelectChange('subLocation', e.target.value)}
                             className="input-field text-sm py-2.5"
                         >
                             <option value="">All areas</option>
@@ -98,39 +133,42 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     </div>
                 )}
 
-                {/* Min Price */}
+                {/* Min Price — local draft, applied only on Apply click */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_min_price')}</label>
                     <input
                         type="number"
-                        value={filters.minPrice}
-                        onChange={e => handleChange('minPrice', e.target.value)}
+                        value={draft.minPrice}
+                        onChange={e => handleDraftChange('minPrice', e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleApply()}
                         placeholder="₹0"
                         className="input-field text-sm py-2.5"
                         min="0"
                     />
                 </div>
 
-                {/* Max Price */}
+                {/* Max Price — local draft */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_max_price')}</label>
                     <input
                         type="number"
-                        value={filters.maxPrice}
-                        onChange={e => handleChange('maxPrice', e.target.value)}
+                        value={draft.maxPrice}
+                        onChange={e => handleDraftChange('maxPrice', e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleApply()}
                         placeholder="₹50000"
                         className="input-field text-sm py-2.5"
                         min="0"
                     />
                 </div>
 
-                {/* Guests */}
+                {/* Guests — local draft */}
                 <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_guests')}</label>
                     <input
                         type="number"
-                        value={filters.guests}
-                        onChange={e => handleChange('guests', e.target.value)}
+                        value={draft.guests}
+                        onChange={e => handleDraftChange('guests', e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleApply()}
                         placeholder="1"
                         className="input-field text-sm py-2.5"
                         min="1"
@@ -142,7 +180,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                     <label className="block text-xs font-semibold text-gray-600 mb-1">{t('filter_sort')}</label>
                     <select
                         value={filters.sort}
-                        onChange={e => handleChange('sort', e.target.value)}
+                        onChange={e => handleSelectChange('sort', e.target.value)}
                         className="input-field text-sm py-2.5"
                     >
                         <option value="newest">{t('filter_sort_newest')}</option>
@@ -172,7 +210,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                             <button
                                 key={fac}
                                 onClick={() => toggleFacility(fac)}
-                                className={`badge cursor-pointer transition-all text-xs py-1.5 px-3 
+                                className={`badge cursor-pointer transition-all text-xs py-1.5 px-3
                   ${selectedFacilities.includes(fac)
                                     ? 'bg-primary-600 text-white shadow-sm'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -187,7 +225,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
 
             {/* Actions */}
             <div className="flex items-center gap-3 pt-2">
-                <button onClick={onApply} className="btn-primary text-sm py-2 px-5">
+                <button onClick={handleApply} className="btn-primary text-sm py-2 px-5">
                     {t('filter_apply')}
                 </button>
                 {hasActiveFilters && (
@@ -215,7 +253,7 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
 
             {/* Desktop: always show, Mobile: toggle */}
             <div className={`${mobileOpen ? 'block' : 'hidden'} lg:block`}>
-                <FilterContent />
+                {filterBody}
             </div>
         </div>
     );

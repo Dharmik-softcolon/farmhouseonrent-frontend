@@ -26,17 +26,18 @@ const SearchResults = () => {
 
     const page = parseInt(searchParams.get('page')) || 1;
 
-    const fetchFarmhouses = async (pageNum = 1) => {
+    const fetchFarmhouses = async (pageNum = 1, overrideFilters) => {
         setLoading(true);
+        const active = overrideFilters || filters;
         try {
             const params = { page: pageNum, limit: 12 };
-            if (filters.city) params.city = filters.city;
-            if (filters.subLocation) params.subLocation = filters.subLocation;
-            if (filters.minPrice) params.minPrice = filters.minPrice;
-            if (filters.maxPrice) params.maxPrice = filters.maxPrice;
-            if (filters.guests) params.maxGuests = filters.guests;
-            if (filters.sort) params.sort = filters.sort;
-            if (filters.facilities) params.facilities = filters.facilities;
+            if (active.city) params.city = active.city;
+            if (active.subLocation) params.subLocation = active.subLocation;
+            if (active.minPrice) params.minPrice = active.minPrice;
+            if (active.maxPrice) params.maxPrice = active.maxPrice;
+            if (active.guests) params.maxGuests = active.guests;
+            if (active.sort) params.sort = active.sort;
+            if (active.facilities) params.facilities = active.facilities;
 
             const searchTerm = searchParams.get('search');
             if (searchTerm) params.search = searchTerm;
@@ -55,16 +56,18 @@ const SearchResults = () => {
         fetchFarmhouses(page);
     }, [page, searchParams.get('search')]);
 
-    const handleApplyFilters = () => {
+    // Called by FilterBar with the fully-merged filter values
+    const handleApplyFilters = (merged) => {
+        const active = merged || filters;
         const params = new URLSearchParams();
-        Object.entries(filters).forEach(([key, val]) => {
+        Object.entries(active).forEach(([key, val]) => {
             if (val) params.set(key, val);
         });
         const search = searchParams.get('search');
         if (search) params.set('search', search);
         params.set('page', '1');
         setSearchParams(params);
-        fetchFarmhouses(1);
+        fetchFarmhouses(1, active);
     };
 
     const handlePageChange = (newPage) => {
