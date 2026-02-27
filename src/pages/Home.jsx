@@ -263,24 +263,143 @@ const Home = () => {
          ══════════════════════════════════════════ */}
             <div className="relative z-20 bg-gray-50 rounded-t-[2rem] sm:rounded-t-[2.5rem] -mt-6 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
 
-                {/* ── TRUST BADGES ── */}
-                <section className="bg-white rounded-t-[2rem] sm:rounded-t-[2.5rem] border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+                {/* ── TRUST BADGE MARQUEE ── */}
+                <section className="bg-white rounded-t-[2rem] sm:rounded-t-[2.5rem] border-b border-gray-100 overflow-hidden">
+                    {/* Fade-edge masks */}
+                    <div className="relative" style={{
+                        maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+                    }}>
+                        <div className="animate-marquee py-5 gap-0" style={{ width: 'max-content' }}>
                             {[
-                                { emoji: '✅', text: 'Verified Properties' },
-                                { emoji: '💰', text: 'Best Price Guaranteed' },
-                                { emoji: '📱', text: 'Instant WhatsApp Booking' },
-                                { emoji: '🛡️', text: '100% Safe & Secure' },
-                            ].map((item, i) => (
-                                <div key={i} className="flex items-center gap-2 justify-center text-xs sm:text-sm text-gray-600">
-                                    <span className="text-base sm:text-lg">{item.emoji}</span>
-                                    <span className="font-medium">{item.text}</span>
+                                {
+                                    bg: 'bg-emerald-50', iconBg: 'bg-emerald-500',
+                                    label: 'Verified Properties', sub: 'Every listing quality-checked',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-amber-50', iconBg: 'bg-amber-500',
+                                    label: 'Best Price Guaranteed', sub: 'No hidden charges ever',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-green-50', iconBg: 'bg-green-500',
+                                    label: 'Instant WhatsApp Booking', sub: 'Connect in seconds',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 00.913.913l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.838-6.324-2.234l-.377-.306-2.655.89.89-2.655-.306-.377A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-blue-50', iconBg: 'bg-blue-500',
+                                    label: '100% Safe & Secure', sub: 'Your privacy is protected',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-purple-50', iconBg: 'bg-purple-500',
+                                    label: '100+ Premium Farms', sub: 'Across Gujarat & Surat',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-rose-50', iconBg: 'bg-rose-500',
+                                    label: 'Flexible Schedule Update', sub: 'Flexible booking policy',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                        </svg>
+                                    )
+                                },
+                                // ── Duplicate for seamless loop ──
+                                {
+                                    bg: 'bg-emerald-50', iconBg: 'bg-emerald-500',
+                                    label: 'Verified Properties', sub: 'Every listing quality-checked',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-amber-50', iconBg: 'bg-amber-500',
+                                    label: 'Best Price Guaranteed', sub: 'No hidden charges ever',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-green-50', iconBg: 'bg-green-500',
+                                    label: 'Instant WhatsApp Booking', sub: 'Connect in seconds',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 00.913.913l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.838-6.324-2.234l-.377-.306-2.655.89.89-2.655-.306-.377A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-blue-50', iconBg: 'bg-blue-500',
+                                    label: '100% Safe & Secure', sub: 'Your privacy is protected',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-purple-50', iconBg: 'bg-purple-500',
+                                    label: '100+ Premium Farms', sub: 'Across Gujarat & Surat',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                        </svg>
+                                    )
+                                },
+                                {
+                                    bg: 'bg-rose-50', iconBg: 'bg-rose-500',
+                                    label: 'Free Cancellation', sub: 'Flexible booking policy',
+                                    icon: (
+                                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                        </svg>
+                                    )
+                                },
+                            ].map((badge, i) => (
+                                <div key={i} className={`inline-flex items-center gap-3 mx-4 px-5 py-3 rounded-2xl border border-gray-100 ${badge.bg} flex-shrink-0`}>
+                                    {/* Icon circle */}
+                                    <div className={`w-9 h-9 rounded-xl ${badge.iconBg} flex items-center justify-center flex-shrink-0 shadow-sm`}>
+                                        {badge.icon}
+                                    </div>
+                                    {/* Text */}
+                                    <div>
+                                        <p className="text-sm font-bold text-gray-900 leading-tight whitespace-nowrap">{badge.label}</p>
+                                        <p className="text-[11px] text-gray-500 leading-tight whitespace-nowrap">{badge.sub}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </section>
+
 
                 {/* ── POPULAR CITIES ── */}
                 {cities.length > 0 && (
@@ -495,7 +614,7 @@ const Home = () => {
                                 Explore Farmhouses
                             </button>
                             <a
-                                href="https://wa.me/919876543210?text=Hi! I'm looking for a farmhouse to book."
+                                href="https://wa.me/916356079603?text=Hi! I'm looking for a farmhouse to book."
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="bg-green-500 text-white font-bold py-2.5 px-6 rounded-xl
