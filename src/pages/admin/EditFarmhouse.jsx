@@ -14,6 +14,8 @@ const BOOL_FACILITIES = ['ac','kitchen','parking','wifi','pet_friendly','securit
 const SIZE_FACILITIES = ['pool','garden'];
 // Quantity-based facilities
 const QTY_FACILITIES = ['metres','bed','khatla','chair','zula'];
+// Surat sub-locations
+const SURAT_SUBLOCATIONS = ['Palsana','Gaypagla','Velanja','Sevni','Olpad','Dandi Road','Other'];
 
 const parseFacilities = (arr = []) => {
     const bools = {};
@@ -67,6 +69,8 @@ const EditFarmhouse = () => {
                 priceWeekday: fh.priceWeekday || '',
                 priceWeekend: fh.priceWeekend || '',
                 city: fh.location?.city || '',
+                subLocation: fh.location?.subLocation || '',
+                subLocationOther: '',
                 fullAddress: fh.location?.fullAddress || '',
                 googleMapLink: fh.location?.googleMapLink || '',
                 maxGuests: fh.maxGuests || '',
@@ -102,6 +106,9 @@ const EditFarmhouse = () => {
         if (!form.priceWeekday || Number(form.priceWeekday) < 0) errs.priceWeekday = 'Valid price required';
         if (!form.priceWeekend || Number(form.priceWeekend) < 0) errs.priceWeekend = 'Valid price required';
         if (!form.city.trim()) errs.city = 'City is required';
+        const isSurat = form.city.trim().toLowerCase() === 'surat';
+        if (isSurat && !form.subLocation) errs.subLocation = 'Sub-location is required for Surat';
+        if (isSurat && form.subLocation === 'Other' && !form.subLocationOther.trim()) errs.subLocationOther = 'Please specify the area';
         if (!form.fullAddress.trim()) errs.fullAddress = 'Address is required';
         if (images.length === 0) errs.images = 'At least one image is required';
         if (!form.maxGuests || Number(form.maxGuests) < 1) errs.maxGuests = 'At least 1 guest';
@@ -116,6 +123,10 @@ const EditFarmhouse = () => {
 
         setSaving(true);
         try {
+            const isSurat = form.city.trim().toLowerCase() === 'surat';
+            const resolvedSubLocation = isSurat
+                ? (form.subLocation === 'Other' ? form.subLocationOther.trim() : form.subLocation)
+                : '';
             const payload = {
                 title: form.title.trim(),
                 description: form.description.trim(),
@@ -123,6 +134,7 @@ const EditFarmhouse = () => {
                 priceWeekend: Number(form.priceWeekend),
                 location: {
                     city: form.city.trim(),
+                    subLocation: resolvedSubLocation,
                     fullAddress: form.fullAddress.trim(),
                     googleMapLink: form.googleMapLink.trim(),
                 },
@@ -199,6 +211,41 @@ const EditFarmhouse = () => {
                                className="input-field" />
                     </div>
                 </div>
+
+                {/* Sub-location (only for Surat) */}
+                {form.city.trim().toLowerCase() === 'surat' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                📍 Area / Sub-location in Surat *
+                            </label>
+                            <select
+                                value={form.subLocation}
+                                onChange={(e) => handleChange('subLocation', e.target.value)}
+                                className={`input-field ${errors.subLocation ? 'border-red-400' : ''}`}
+                            >
+                                <option value="">Select area…</option>
+                                {SURAT_SUBLOCATIONS.map(s => (
+                                    <option key={s} value={s}>{s}</option>
+                                ))}
+                            </select>
+                            {errors.subLocation && <p className="text-red-500 text-xs mt-1">{errors.subLocation}</p>}
+                        </div>
+                        {form.subLocation === 'Other' && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Specify Area *</label>
+                                <input
+                                    type="text"
+                                    value={form.subLocationOther}
+                                    onChange={(e) => handleChange('subLocationOther', e.target.value)}
+                                    placeholder="e.g. Bardoli, Kamrej…"
+                                    className={`input-field ${errors.subLocationOther ? 'border-red-400' : ''}`}
+                                />
+                                {errors.subLocationOther && <p className="text-red-500 text-xs mt-1">{errors.subLocationOther}</p>}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">{t('form_address')} *</label>

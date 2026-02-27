@@ -34,6 +34,7 @@ export const farmhouseAPI = {
     update: (id, data) => api.put(`/farmhouses/${id}`, data),
     delete: (id) => api.delete(`/farmhouses/${id}`),
     getCities: () => api.get('/farmhouses/cities/list'),
+    getSubLocations: (city) => api.get('/farmhouses/sublocations/list', { params: { city } }),
 };
 
 export const bookingAPI = {

@@ -16,6 +16,7 @@ const SearchResults = () => {
 
     const [filters, setFilters] = useState({
         city: searchParams.get('city') || '',
+        subLocation: searchParams.get('subLocation') || '',
         minPrice: searchParams.get('minPrice') || '',
         maxPrice: searchParams.get('maxPrice') || '',
         guests: searchParams.get('guests') || '',
@@ -30,6 +31,7 @@ const SearchResults = () => {
         try {
             const params = { page: pageNum, limit: 12 };
             if (filters.city) params.city = filters.city;
+            if (filters.subLocation) params.subLocation = filters.subLocation;
             if (filters.minPrice) params.minPrice = filters.minPrice;
             if (filters.maxPrice) params.maxPrice = filters.maxPrice;
             if (filters.guests) params.maxGuests = filters.guests;

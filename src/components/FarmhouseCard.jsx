@@ -40,6 +40,9 @@ const FarmhouseCard = ({ farmhouse }) => {
                     <div className="absolute bottom-3 left-3 flex items-center gap-1 text-white text-xs font-medium">
                         <FiMapPin className="w-3 h-3" />
                         {location?.city}
+                        {location?.subLocation && (
+                            <span className="opacity-75">· {location.subLocation}</span>
+                        )}
                     </div>
                 </div>
 

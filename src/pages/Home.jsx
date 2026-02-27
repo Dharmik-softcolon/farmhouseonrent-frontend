@@ -16,9 +16,11 @@ const Home = () => {
     const navigate = useNavigate();
     const [farmhouses, setFarmhouses] = useState([]);
     const [cities, setCities] = useState([]);
+    const [subLocations, setSubLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedCity, setSelectedCity] = useState('Surat');
+    const [selectedSubLocation, setSelectedSubLocation] = useState('');
     const [scrollY, setScrollY] = useState(0);
     const heroRef = useRef(null);
 
@@ -47,11 +49,26 @@ const Home = () => {
         }
     };
 
+    // Fetch sub-locations when selected city is Surat
+    useEffect(() => {
+        if (selectedCity.toLowerCase() === 'surat') {
+            farmhouseAPI.getSubLocations('Surat')
+                .then(res => setSubLocations(res.data.data || []))
+                .catch(() => setSubLocations([]));
+        } else {
+            setSubLocations([]);
+            setSelectedSubLocation('');
+        }
+    }, [selectedCity]);
+
     const handleSearch = (e) => {
         e.preventDefault();
         const params = new URLSearchParams();
         if (searchQuery.trim()) params.set('search', searchQuery.trim());
         if (selectedCity) params.set('city', selectedCity);
+        if (selectedCity.toLowerCase() === 'surat' && selectedSubLocation) {
+            params.set('subLocation', selectedSubLocation);
+        }
         navigate(`/farmhouses?${params.toString()}`);
     };
 
@@ -140,7 +157,7 @@ const Home = () => {
                                         <FiMapPin className="w-4 h-4 text-primary-600 flex-shrink-0" />
                                         <select
                                             value={selectedCity}
-                                            onChange={e => setSelectedCity(e.target.value)}
+                                            onChange={e => { setSelectedCity(e.target.value); setSelectedSubLocation(''); }}
                                             className="bg-transparent py-2.5 sm:py-2 outline-none text-gray-700 text-sm font-medium
                                cursor-pointer min-w-[100px] sm:min-w-[120px]"
                                         >
@@ -150,6 +167,23 @@ const Home = () => {
                                             ))}
                                         </select>
                                     </div>
+
+                                    {/* Sub-location (Surat only) */}
+                                    {selectedCity.toLowerCase() === 'surat' && subLocations.length > 0 && (
+                                        <div className="flex items-center gap-2 px-3 sm:border-r border-gray-200 flex-shrink-0">
+                                            <select
+                                                value={selectedSubLocation}
+                                                onChange={e => setSelectedSubLocation(e.target.value)}
+                                                className="bg-transparent py-2.5 sm:py-2 outline-none text-gray-700 text-sm font-medium
+                               cursor-pointer min-w-[90px] sm:min-w-[110px]"
+                                            >
+                                                <option value="">All areas</option>
+                                                {subLocations.map(s => (
+                                                    <option key={s} value={s}>{s}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
 
                                     {/* Search Input */}
                                     <div className="flex items-center flex-1 gap-2 px-3">

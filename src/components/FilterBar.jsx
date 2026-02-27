@@ -12,6 +12,7 @@ const FACILITY_OPTIONS = [
 const FilterBar = ({ filters, setFilters, onApply }) => {
     const { t } = useLanguage();
     const [cities, setCities] = useState([]);
+    const [subLocations, setSubLocations] = useState([]);
     const [showFacilities, setShowFacilities] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -20,6 +21,21 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
             .then(res => setCities(res.data.data || []))
             .catch(() => {});
     }, []);
+
+    // Fetch sub-locations whenever city changes to Surat
+    useEffect(() => {
+        if (filters.city && filters.city.toLowerCase() === 'surat') {
+            farmhouseAPI.getSubLocations('Surat')
+                .then(res => setSubLocations(res.data.data || []))
+                .catch(() => setSubLocations([]));
+        } else {
+            setSubLocations([]);
+            // Clear subLocation filter when switching away from Surat
+            if (filters.subLocation) {
+                setFilters(prev => ({ ...prev, subLocation: '' }));
+            }
+        }
+    }, [filters.city]);
 
     const handleChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
@@ -38,11 +54,12 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
     const selectedFacilities = filters.facilities ? filters.facilities.split(',').filter(Boolean) : [];
 
     const clearAll = () => {
-        setFilters({ city: '', minPrice: '', maxPrice: '', guests: '', sort: 'newest', facilities: '' });
+        setFilters({ city: '', subLocation: '', minPrice: '', maxPrice: '', guests: '', sort: 'newest', facilities: '' });
         onApply();
     };
 
-    const hasActiveFilters = filters.city || filters.minPrice || filters.maxPrice || filters.guests || filters.facilities;
+    const isSurat = filters.city && filters.city.toLowerCase() === 'surat';
+    const hasActiveFilters = filters.city || filters.subLocation || filters.minPrice || filters.maxPrice || filters.guests || filters.facilities;
 
     const FilterContent = () => (
         <div className="space-y-4">
@@ -61,6 +78,25 @@ const FilterBar = ({ filters, setFilters, onApply }) => {
                         ))}
                     </select>
                 </div>
+
+                {/* Sub-location (Surat only) */}
+                {isSurat && (
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
+                            📍 Area in Surat
+                        </label>
+                        <select
+                            value={filters.subLocation || ''}
+                            onChange={e => handleChange('subLocation', e.target.value)}
+                            className="input-field text-sm py-2.5"
+                        >
+                            <option value="">All areas</option>
+                            {subLocations.map(s => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 {/* Min Price */}
                 <div>
