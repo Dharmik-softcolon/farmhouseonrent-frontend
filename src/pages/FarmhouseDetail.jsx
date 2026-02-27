@@ -46,6 +46,10 @@ const FarmhouseDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [reviewKey, setReviewKey] = useState(0);
+    // Inquiry-gated review: persisted per farmhouse in localStorage
+    const [hasInquired, setHasInquired] = useState(() => {
+        try { return localStorage.getItem(`inquired_${id}`) === 'true'; } catch { return false; }
+    });
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -73,6 +77,12 @@ const FarmhouseDetail = () => {
         setReviewKey(prev => prev + 1);
         // Reload farmhouse to get updated rating
         farmhouseAPI.getById(id).then(res => setFarmhouse(res.data.data)).catch(() => {});
+    }, [id]);
+
+    // Called by BookingForm after a successful submission
+    const handleInquirySubmitted = useCallback(() => {
+        try { localStorage.setItem(`inquired_${id}`, 'true'); } catch { /* ignore */ }
+        setHasInquired(true);
     }, [id]);
 
     if (loading) return <Spinner text={t('common_loading')} />;
@@ -112,7 +122,7 @@ const FarmhouseDetail = () => {
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left */}
+                    {/* Left: info + reviews */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Title & Rating */}
                         <div>
@@ -210,31 +220,67 @@ const FarmhouseDetail = () => {
                             </div>
                         )}
 
+                        {/* ═══ MOBILE: Booking + WhatsApp first ═══ */}
+                        <div className="lg:hidden space-y-4">
+                            <div id="booking" className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
+                                <BookingForm farmhouse={farmhouse} onSubmitted={handleInquirySubmitted} />
+                            </div>
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                                <h3 className="font-bold text-gray-900 mb-3">{t('detail_contact')}</h3>
+                                <a href={`tel:+91${contactNumber}`}
+                                   className="flex items-center gap-2 text-primary-600 font-medium mb-3">
+                                    <FiPhone className="w-4 h-4" /> +91 {contactNumber}
+                                </a>
+                                <WhatsAppButton contactNumber={contactNumber} farmhouseTitle={title} />
+                            </div>
+                        </div>
+
                         {/* ═══ GUEST PHOTOS FROM REVIEWS ═══ */}
                         <ReviewPhotosGrid key={`photos-${reviewKey}`} farmhouseId={id} />
 
-                        {/* ═══ REVIEWS SECTION ═══ */}
+                        {/* ═══ REVIEWS SECTION ═══
+                             Desktop: always visible
+                             Mobile: only after inquiry submitted */}
                         <div id="reviews" className="pt-4">
                             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                                 <FiStar className="w-5 h-5 text-yellow-500" />
                                 {t('review_section_title')}
                             </h2>
 
-                            {/* Review List */}
+                            {/* Review List — always visible (read-only) */}
                             <ReviewList key={`list-${reviewKey}`} farmhouseId={id} />
 
-                            {/* Write Review Form */}
-                            <div className="mt-8 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                                <ReviewForm farmhouse={farmhouse} onReviewAdded={handleReviewAdded} />
+                            {/* Write Review Form — gated by inquiry */}
+                            <div className="mt-8">
+                                {hasInquired ? (
+                                    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                                        <ReviewForm farmhouse={farmhouse} onReviewAdded={handleReviewAdded} />
+                                    </div>
+                                ) : (
+                                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3">
+                                        <span className="text-2xl">🔒</span>
+                                        <div>
+                                            <p className="font-semibold text-amber-800 text-sm">Submit an inquiry first</p>
+                                            <p className="text-amber-700 text-xs mt-0.5 leading-relaxed">
+                                                Fill in the booking form above and submit your inquiry to unlock the review section.
+                                            </p>
+                                            <a href="#booking"
+                                               className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-primary-600
+                                                   bg-primary-50 px-3 py-1.5 rounded-lg hover:bg-primary-100 transition-colors">
+                                                Send Inquiry ↑
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
 
-                    {/* Right: Booking Sidebar */}
-                    <div className="lg:col-span-1">
+                    {/* Right: Booking Sidebar (desktop only) */}
+                    <div className="hidden lg:block lg:col-span-1">
                         <div className="sticky top-20 space-y-6">
                         <div id="booking" className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                                <BookingForm farmhouse={farmhouse} />
+                                <BookingForm farmhouse={farmhouse} onSubmitted={handleInquirySubmitted} />
                             </div>
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                                 <h3 className="font-bold text-gray-900 mb-3">{t('detail_contact')}</h3>

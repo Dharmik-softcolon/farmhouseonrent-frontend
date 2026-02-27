@@ -5,7 +5,7 @@ import WhatsAppButton from './WhatsAppButton';
 import toast from 'react-hot-toast';
 import { FiSend, FiUser, FiPhone, FiCalendar, FiMessageSquare } from 'react-icons/fi';
 
-const BookingForm = ({ farmhouse }) => {
+const BookingForm = ({ farmhouse, onSubmitted }) => {
     const { t } = useLanguage();
     const [form, setForm] = useState({
         name: '',
@@ -39,6 +39,8 @@ const BookingForm = ({ farmhouse }) => {
             });
             setSubmitted(true);
             toast.success(t('booking_success'));
+            // Notify parent so it can unlock the review section
+            if (onSubmitted) onSubmitted();
         } catch (err) {
             toast.error(err.response?.data?.message || t('common_error'));
         } finally {

@@ -522,8 +522,8 @@ const Home = () => {
 
                 {/* ── CUSTOMER REVIEWS ── */}
                 <section className="bg-gray-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-                        <div className="text-center mb-10">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+                        <div className="text-center mb-8">
                             <span className="inline-block bg-primary-50 text-primary-600 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
                                 Guest Testimonials
                             </span>
@@ -535,12 +535,12 @@ const Home = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
+                        {(() => {
+                            const reviews = [
                                 {
                                     name: 'Raj Timbadiya',
                                     location: 'Surat',
-                                    avatar: 'ST',
+                                    avatar: 'RT',
                                     rating: 5,
                                     date: 'July 2025',
                                     review: 'Found this farmhouse for our corporate team outing. The team had a blast! Great amenities, fast response on WhatsApp, and the pricing was well within budget. A truly seamless experience from start to finish.',
@@ -549,7 +549,7 @@ const Home = () => {
                                 {
                                     name: 'Mitesh Dholakiya',
                                     location: 'Surat',
-                                    avatar: 'SP',
+                                    avatar: 'MD',
                                     rating: 4,
                                     date: 'January 2026',
                                     review: 'Very good farmhouse overall. The kids had a great time in the pool and open grounds. Booking was easy and the property manager was responsive. Small suggestion — a BBQ setup would make it even better!',
@@ -564,32 +564,27 @@ const Home = () => {
                                     review: 'This was our second booking through FarmStay and it was just as amazing. Love how they verify each property — you know exactly what to expect. The photos matched perfectly. FarmStay is our go-to for every getaway!',
                                     tag: 'Weekend Escape'
                                 },
-                            ].map((review, i) => (
-                                <div
-                                    key={i}
-                                    className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm
-                                               hover:shadow-md hover:border-primary-100 transition-all flex flex-col gap-4"
-                                >
-                                    {/* Stars */}
+                            ];
+                            const ReviewCard = ({ review }) => (
+                                <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex flex-col gap-4 h-full">
+                                    {/* Stars + tag */}
                                     <div className="flex items-center gap-1">
                                         {Array.from({ length: 5 }).map((_, s) => (
                                             <FiStar
                                                 key={s}
-                                                className={`w-4 h-4 ${s < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`}
+                                                className={`w-4 h-4 ${s < review.rating ? 'text-yellow-400' : 'text-gray-200'}`}
                                                 style={{ fill: s < review.rating ? '#facc15' : 'none' }}
                                             />
                                         ))}
-                                        <span className="ml-auto text-[10px] font-medium text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">
+                                        <span className="ml-auto text-[10px] font-medium text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full whitespace-nowrap">
                                             {review.tag}
                                         </span>
                                     </div>
-
-                                    {/* Review Text */}
-                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">
+                                    {/* Review text — clamped to 4 lines */}
+                                    <p className="text-sm text-gray-600 leading-relaxed flex-1 line-clamp-4">
                                         "{review.review}"
                                     </p>
-
-                                    {/* Reviewer Info */}
+                                    {/* Author */}
                                     <div className="flex items-center gap-3 pt-3 border-t border-gray-50">
                                         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-primary-700
                                                         flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
@@ -601,11 +596,37 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            );
+                            return (
+                                <>
+                                    {/* Mobile: horizontal snap carousel */}
+                                    <div className="sm:hidden -mx-4 px-4">
+                                        <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-scroll-x pb-2">
+                                            {reviews.map((review, i) => (
+                                                <div key={i} className="flex-shrink-0 w-[80vw] snap-start">
+                                                    <ReviewCard review={review} />
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {/* Scroll hint dots */}
+                                        <div className="flex justify-center gap-1.5 mt-3">
+                                            {reviews.map((_, i) => (
+                                                <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-primary-500' : 'bg-gray-300'}`} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {/* Desktop: 3-col grid */}
+                                    <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {reviews.map((review, i) => (
+                                            <ReviewCard key={i} review={review} />
+                                        ))}
+                                    </div>
+                                </>
+                            );
+                        })()}
 
                         {/* Bottom Rating Summary */}
-                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                             <div className="text-center">
                                 <p className="text-4xl font-extrabold text-gray-900">4.9</p>
                                 {/*<div className="flex items-center justify-center gap-0.5 my-1">*/}
