@@ -43,10 +43,7 @@ export const bookingAPI = {
 };
 
 export const reviewAPI = {
-    create: (formData) => api.post('/reviews', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 60000,
-    }),
+    create: (data) => api.post('/reviews', data, { timeout: 60000 }),
     getByFarmhouse: (id, params) => api.get(`/reviews/farmhouse/${id}`, { params }),
     getPhotos: (id) => api.get(`/reviews/photos/${id}`),
     markHelpful: (id) => api.post(`/reviews/${id}/helpful`),

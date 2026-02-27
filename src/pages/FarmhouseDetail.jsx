@@ -225,7 +225,7 @@ const FarmhouseDetail = () => {
 
                             {/* Write Review Form */}
                             <div className="mt-8 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                                <ReviewForm farmhouseId={id} onReviewAdded={handleReviewAdded} />
+                                <ReviewForm farmhouse={farmhouse} onReviewAdded={handleReviewAdded} />
                             </div>
                         </div>
                     </div>
