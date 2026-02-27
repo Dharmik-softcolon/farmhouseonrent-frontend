@@ -4,9 +4,9 @@ import { farmhouseAPI } from '../services/api';
 import { FiFilter, FiX, FiChevronDown } from 'react-icons/fi';
 
 const FACILITY_OPTIONS = [
-    'pool','garden','ac','kitchen','parking','wifi','bbq','bonfire',
-    'gym','spa','pet_friendly','security','power_backup','waterpark',
-    'indoor_games','outdoor_games','music_system','projector','caretaker'
+    'pool','garden','ac','kitchen','parking','wifi',
+    'pet_friendly','security','power_backup','waterpark',
+    'outdoor_games','music_system','caretaker','kids_play_area','gajebo'
 ];
 
 const FilterBar = ({ filters, setFilters, onApply }) => {

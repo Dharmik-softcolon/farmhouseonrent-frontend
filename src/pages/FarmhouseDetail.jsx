@@ -18,10 +18,23 @@ import {
 
 const facilityIcons = {
     pool: '🏊', garden: '🌿', ac: '❄️', kitchen: '🍳', parking: '🅿️',
-    wifi: '📶', bbq: '🔥', bonfire: '🔥', games: '🎮', gym: '💪',
-    spa: '💆', pet_friendly: '🐾', security: '🛡️', power_backup: '⚡',
-    waterpark: '🌊', indoor_games: '🎯', outdoor_games: '⚽',
-    music_system: '🎵', projector: '📽️', caretaker: '👤'
+    wifi: '📶', pet_friendly: '🐾', security: '🛡️', power_backup: '⚡',
+    waterpark: '🌊', outdoor_games: '⚽', music_system: '🎵', caretaker: '👤',
+    metres: '📐', bed: '🛏️', khatla: '🪑', chair: '🪑', zula: '🪆',
+    kids_play_area: '🎠', gajebo: '⛺',
+};
+
+const SIZE_FACILITIES = ['pool','garden'];
+const QTY_FACILITIES = ['metres','bed','khatla','chair','zula'];
+
+// Parse a facility entry like 'pool:big' => { key:'pool', extra:'big', type:'size' }
+const parseFacilityEntry = (f) => {
+    if (f.includes(':')) {
+        const [key, val] = f.split(':');
+        const type = SIZE_FACILITIES.includes(key) ? 'size' : QTY_FACILITIES.includes(key) ? 'qty' : 'bool';
+        return { key, extra: val, type };
+    }
+    return { key: f, extra: null, type: 'bool' };
 };
 
 const FarmhouseDetail = () => {
@@ -150,12 +163,18 @@ const FarmhouseDetail = () => {
                         <div>
                             <h2 className="text-xl font-bold text-gray-900 mb-4">{t('detail_facilities')}</h2>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                {facilities?.map(fac => (
-                                    <div key={fac} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2.5 border border-gray-100">
-                                        <span className="text-lg">{facilityIcons[fac] || '✅'}</span>
-                                        <span className="text-sm text-gray-700 font-medium">{t(`facility_${fac}`)}</span>
-                                    </div>
-                                ))}
+                                {facilities?.map(fac => {
+                                    const { key, extra, type } = parseFacilityEntry(fac);
+                                    let label = t(`facility_${key}`);
+                                    if (type === 'size') label = `${label} (${t(`facility_size_${extra}`) || extra})`;
+                                    if (type === 'qty') label = `${label}: ${extra}`;
+                                    return (
+                                        <div key={fac} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2.5 border border-gray-100">
+                                            <span className="text-lg">{facilityIcons[key] || '✅'}</span>
+                                            <span className="text-sm text-gray-700 font-medium">{label}</span>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
 

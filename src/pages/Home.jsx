@@ -354,7 +354,7 @@ const Home = () => {
                                     tag: 'Corporate Outing'
                                 },
                                 {
-                                    name: 'Savan Parvadiya',
+                                    name: 'Mitesh Dholakiya',
                                     location: 'Surat',
                                     avatar: 'SP',
                                     rating: 4,

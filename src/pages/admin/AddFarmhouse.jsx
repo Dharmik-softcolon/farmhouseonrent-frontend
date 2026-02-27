@@ -7,11 +7,38 @@ import VideoUploader from '../../components/VideoUploader';
 import toast from 'react-hot-toast';
 import { FiPlusCircle, FiSave, FiX } from 'react-icons/fi';
 
-const FACILITY_OPTIONS = [
-    'pool','garden','ac','kitchen','parking','wifi','bbq','bonfire',
-    'gym','spa','pet_friendly','security','power_backup','waterpark',
-    'indoor_games','outdoor_games','music_system','projector','caretaker',
-];
+// Simple on/off facilities
+const BOOL_FACILITIES = ['ac','kitchen','parking','wifi','pet_friendly','security','power_backup','waterpark','outdoor_games','music_system','caretaker','kids_play_area','gajebo'];
+// Size-selectable facilities
+const SIZE_FACILITIES = ['pool','garden'];
+// Quantity-based facilities
+const QTY_FACILITIES = ['metres','bed','khatla','chair','zula'];
+
+// Parse facilities array into structured state
+const parseFacilities = (arr = []) => {
+    const bools = {};
+    const sizes = {};
+    const qtys = {};
+    arr.forEach(f => {
+        if (f.includes(':')) {
+            const [key, val] = f.split(':');
+            if (SIZE_FACILITIES.includes(key)) sizes[key] = val;
+            else if (QTY_FACILITIES.includes(key)) qtys[key] = val;
+        } else {
+            bools[f] = true;
+        }
+    });
+    return { bools, sizes, qtys };
+};
+
+// Serialize structured state back to array
+const serializeFacilities = ({ bools, sizes, qtys }) => {
+    const arr = [];
+    Object.entries(bools).forEach(([k, v]) => { if (v) arr.push(k); });
+    Object.entries(sizes).forEach(([k, v]) => { if (v) arr.push(`${k}:${v}`); });
+    Object.entries(qtys).forEach(([k, v]) => { if (v && Number(v) > 0) arr.push(`${k}:${v}`); });
+    return arr;
+};
 
 const AddFarmhouse = () => {
     const { t } = useLanguage();
@@ -22,8 +49,11 @@ const AddFarmhouse = () => {
     const [form, setForm] = useState({
         title: '', description: '', priceWeekday: '', priceWeekend: '',
         city: '', fullAddress: '', googleMapLink: '',
-        maxGuests: '', contactNumber: '', facilities: [],
+        maxGuests: '', contactNumber: '',
     });
+    const [facBools, setFacBools] = useState({});
+    const [facSizes, setFacSizes] = useState({});
+    const [facQtys, setFacQtys] = useState({});
     const [images, setImages] = useState([]);
     const [videos, setVideos] = useState([]);
 
@@ -32,14 +62,9 @@ const AddFarmhouse = () => {
         if (errors[field]) setErrors((prev) => ({ ...prev, [field]: '' }));
     };
 
-    const toggleFacility = (fac) => {
-        setForm((prev) => ({
-            ...prev,
-            facilities: prev.facilities.includes(fac)
-                ? prev.facilities.filter((f) => f !== fac)
-                : [...prev.facilities, fac],
-        }));
-    };
+    const toggleBool = (fac) => setFacBools(prev => ({ ...prev, [fac]: !prev[fac] }));
+    const setSize = (fac, size) => setFacSizes(prev => ({ ...prev, [fac]: prev[fac] === size ? '' : size }));
+    const setQty = (fac, val) => setFacQtys(prev => ({ ...prev, [fac]: val }));
 
     const validate = () => {
         const errs = {};
@@ -74,7 +99,7 @@ const AddFarmhouse = () => {
                 },
                 images,
                 videos,
-                facilities: form.facilities,
+                facilities: serializeFacilities({ bools: facBools, sizes: facSizes, qtys: facQtys }),
                 maxGuests: Number(form.maxGuests),
                 contactNumber: form.contactNumber.trim(),
             };
@@ -192,18 +217,45 @@ const AddFarmhouse = () => {
 
                 {/* Facilities */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form_facilities')}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">{t('form_facilities')}</label>
+
+                    {/* Size-selectable: Pool & Garden */}
+                    <div className="mb-4 space-y-3">
+                        {SIZE_FACILITIES.map(fac => (
+                            <div key={fac} className="flex flex-wrap items-center gap-2">
+                                <span className="text-sm font-medium text-gray-700 w-28">{t(`facility_${fac}`)}:</span>
+                                {['big', 'medium'].map(size => (
+                                    <button key={size} type="button"
+                                        onClick={() => setSize(fac, size)}
+                                        className={`badge cursor-pointer transition-all text-xs py-1.5 px-3
+                                        ${facSizes[fac] === size ? 'bg-primary-600 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                                        {t(`facility_size_${size}`)}
+                                    </button>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Quantity-based items */}
+                    <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {QTY_FACILITIES.map(fac => (
+                            <div key={fac} className="flex items-center gap-2">
+                                <label className="text-sm text-gray-700 font-medium w-20 shrink-0">{t(`facility_${fac}`)}</label>
+                                <input type="number" min="0" placeholder={t('facility_qty_label')}
+                                    value={facQtys[fac] || ''}
+                                    onChange={e => setQty(fac, e.target.value)}
+                                    className="input-field py-1 px-2 text-sm w-20" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Boolean toggles */}
                     <div className="flex flex-wrap gap-2">
-                        {FACILITY_OPTIONS.map((fac) => (
-                            <button
-                                key={fac}
-                                type="button"
-                                onClick={() => toggleFacility(fac)}
+                        {BOOL_FACILITIES.map(fac => (
+                            <button key={fac} type="button"
+                                onClick={() => toggleBool(fac)}
                                 className={`badge cursor-pointer transition-all text-xs py-1.5 px-3
-                  ${form.facilities.includes(fac)
-                                    ? 'bg-primary-600 text-white shadow-sm'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                            >
+                                ${facBools[fac] ? 'bg-primary-600 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                                 {t(`facility_${fac}`)}
                             </button>
                         ))}
