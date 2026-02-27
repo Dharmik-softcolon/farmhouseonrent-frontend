@@ -522,7 +522,7 @@ const Home = () => {
 
                 {/* ── CUSTOMER REVIEWS ── */}
                 <section className="bg-gray-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6 sm:py-14">
                         <div className="text-center mb-8">
                             <span className="inline-block bg-primary-50 text-primary-600 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
                                 Guest Testimonials
@@ -625,26 +625,21 @@ const Home = () => {
                             );
                         })()}
 
-                        {/* Bottom Rating Summary */}
-                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                            <div className="text-center">
-                                <p className="text-4xl font-extrabold text-gray-900">4.9</p>
-                                {/*<div className="flex items-center justify-center gap-0.5 my-1">*/}
-                                {/*    {Array.from({ length: 5 }).map((_, i) => (*/}
-                                {/*        <FiStar key={i} className="w-4 h-4 text-yellow-400" style={{ fill: '#facc15' }} />*/}
-                                {/*    ))}*/}
-                                {/*</div>*/}
-                                <p className="text-xs text-gray-400 font-medium">Average Rating</p>
+                        {/* Bottom Rating Summary — always 1 row */}
+                        <div className="mt-6 flex flex-row items-center justify-around gap-2 bg-white rounded-2xl py-4 px-3 border border-gray-100 shadow-sm">
+                            <div className="text-center flex-1">
+                                <p className="text-2xl sm:text-4xl font-extrabold text-gray-900">4.9</p>
+                                <p className="text-[10px] sm:text-xs text-gray-400 font-medium mt-0.5">Avg Rating</p>
                             </div>
-                            <div className="w-px h-12 bg-gray-100 hidden sm:block" />
-                            <div className="text-center">
-                                <p className="text-4xl font-extrabold text-gray-900">25+</p>
-                                <p className="text-xs text-gray-400 font-medium mt-1">Happy Guests</p>
+                            <div className="w-px h-10 bg-gray-100" />
+                            <div className="text-center flex-1">
+                                <p className="text-2xl sm:text-4xl font-extrabold text-gray-900">25+</p>
+                                <p className="text-[10px] sm:text-xs text-gray-400 font-medium mt-0.5">Happy Guests</p>
                             </div>
-                            <div className="w-px h-12 bg-gray-100 hidden sm:block" />
-                            <div className="text-center">
-                                <p className="text-4xl font-extrabold text-gray-900">98%</p>
-                                <p className="text-xs text-gray-400 font-medium mt-1">Would Recommend</p>
+                            <div className="w-px h-10 bg-gray-100" />
+                            <div className="text-center flex-1">
+                                <p className="text-2xl sm:text-4xl font-extrabold text-gray-900">98%</p>
+                                <p className="text-[10px] sm:text-xs text-gray-400 font-medium mt-0.5">Recommend</p>
                             </div>
                         </div>
                     </div>
@@ -657,7 +652,7 @@ const Home = () => {
                         <div className="absolute inset-0 bg-primary-900/80 backdrop-blur-sm" />
                     </div>
 
-                    <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
+                    <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
                         <h2 className="text-xl sm:text-3xl font-bold text-white mb-3">
                             Ready for an Unforgettable Getaway?
                         </h2>
