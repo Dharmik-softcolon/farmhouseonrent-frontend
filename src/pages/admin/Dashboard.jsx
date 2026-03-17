@@ -24,7 +24,7 @@ const Dashboard = () => {
     const loadDashboard = async () => {
         try {
             const [fhRes, bookRes, reviewRes] = await Promise.all([
-                farmhouseAPI.getAll({ limit: 100 }),
+                farmhouseAPI.getAdminAll({ limit: 100 }),
                 bookingAPI.getAll({ limit: 5 }),
                 reviewAPI.getAll({ limit: 1 }).catch(() => ({ data: { pagination: { total: 0 } } }))
             ]);
@@ -50,6 +50,18 @@ const Dashboard = () => {
             loadDashboard();
         } catch (err) {
             toast.error(err.response?.data?.message || 'Delete failed');
+        }
+    };
+
+    const handleToggleStatus = async (id, currentStatus) => {
+        try {
+            await farmhouseAPI.update(id, { isActive: !currentStatus });
+            toast.success(`Farmhouse ${!currentStatus ? 'enabled' : 'disabled'} successfully`);
+            setFarmhouses(prev => prev.map(fh => 
+                fh._id === id ? { ...fh, isActive: !currentStatus } : fh
+            ));
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to update status');
         }
     };
 
@@ -122,6 +134,7 @@ const Dashboard = () => {
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('card_weekday')}</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('card_weekend')}</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('filter_guests')}</th>
+                                <th className="text-center px-5 py-3 font-semibold text-gray-600">Status</th>
                                 <th className="text-right px-5 py-3 font-semibold text-gray-600">{t('leads_actions')}</th>
                             </tr>
                             </thead>
@@ -156,6 +169,25 @@ const Dashboard = () => {
                                     <td className="px-5 py-3 text-gray-600">₹{fh.priceWeekday?.toLocaleString('en-IN')}</td>
                                     <td className="px-5 py-3 text-gray-600">₹{fh.priceWeekend?.toLocaleString('en-IN')}</td>
                                     <td className="px-5 py-3 text-gray-600">{fh.maxGuests}</td>
+                                    <td className="px-5 py-3">
+                                        <div className="flex items-center justify-center">
+                                            <button
+                                                onClick={() => handleToggleStatus(fh._id, fh.isActive)}
+                                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${
+                                                    fh.isActive ? 'bg-primary-600' : 'bg-gray-200'
+                                                }`}
+                                                role="switch"
+                                                aria-checked={fh.isActive}
+                                            >
+                                                <span
+                                                    aria-hidden="true"
+                                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                                        fh.isActive ? 'translate-x-5' : 'translate-x-0'
+                                                    }`}
+                                                />
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td className="px-5 py-3">
                                         <div className="flex items-center justify-end gap-2">
                                             <button onClick={() => navigate(`/farmhouse/${fh._id}`)}

@@ -561,7 +561,7 @@ const Home = () => {
                                     avatar: 'KK',
                                     rating: 5,
                                     date: 'February 2024',
-                                    review: 'This was our second booking through FarmStay and it was just as amazing. Love how they verify each property — you know exactly what to expect. The photos matched perfectly. FarmStay is our go-to for every getaway!',
+                                    review: 'This was our second booking through FarmHouseOnRent and it was just as amazing. Love how they verify each property — you know exactly what to expect. The photos matched perfectly. FarmHouseOnRent is our go-to for every getaway!',
                                     tag: 'Weekend Escape'
                                 },
                             ];

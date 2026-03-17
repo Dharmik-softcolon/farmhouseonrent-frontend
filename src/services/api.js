@@ -29,6 +29,7 @@ api.interceptors.response.use(
 
 export const farmhouseAPI = {
     getAll: (params) => api.get('/farmhouses', { params }),
+    getAdminAll: (params) => api.get('/farmhouses/admin/all', { params }),
     getById: (id) => api.get(`/farmhouses/${id}`),
     create: (data) => api.post('/farmhouses', data),
     update: (id, data) => api.put(`/farmhouses/${id}`, data),

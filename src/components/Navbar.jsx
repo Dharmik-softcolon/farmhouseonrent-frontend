@@ -62,9 +62,10 @@ const Navbar = () => {
                                         <FiLogOut className="w-4 h-4" /> {t('nav_logout')}
                                     </button>
                                 </>
-                            ) : (
-                                <NavLink to="/admin/login" icon={FiLogIn} label={t('nav_login')} />
-                            )}
+                            ) : ( ""
+                                // <NavLink to="/admin/login" icon={FiLogIn} label={t('nav_login')} />
+                            )
+                            }
                             <div className="ml-2 border-l pl-2 border-gray-200">
                                 <LanguageSwitcher />
                             </div>
@@ -97,8 +98,8 @@ const Navbar = () => {
                                         <FiLogOut className="w-4 h-4" /> {t('nav_logout')}
                                     </button>
                                 </>
-                            ) : (
-                                <NavLink to="/admin/login" icon={FiLogIn} label={t('nav_login')} />
+                            ) : ( ""
+                                // <NavLink to="/admin/login" icon={FiLogIn} label={t('nav_login')} />
                             )}
                         </div>
                     )}

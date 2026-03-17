@@ -16,7 +16,7 @@ const Footer = () => {
                         <div className="mb-4">
                             <Logo size="md" white={true} />
                         </div>
-                        <p className="text-sm leading-relaxed text-gray-400">
+                        <p className="text-sm leading-relaxed text-gray-400 ">
                             {t('footer_about_text')}
                         </p>
                     </div>
