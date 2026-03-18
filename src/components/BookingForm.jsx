@@ -39,6 +39,27 @@ const BookingForm = ({ farmhouse, onSubmitted }) => {
             });
             setSubmitted(true);
             toast.success(t('booking_success'));
+            // ------------------------------------- watsapp start
+
+            // Construct WhatsApp message and redirect
+            const buildMessage = () => {
+                let msg = `Hi! I'm interested in booking *${farmhouse.title}*.`;
+                msg += `\n\nName: ${form.name}`;
+                msg += `\nMobile: ${form.mobileNumber}`;
+                msg += `\nPreferred Date: ${form.preferredDate}`;
+                if (form.message.trim()) msg += `\nMessage: ${form.message.trim()}`;
+                msg += `\n\nPlease share availability and pricing details. Thank you!`;
+                return encodeURIComponent(msg);
+            };
+
+            const whatsappUrl = `https://wa.me/91${farmhouse.contactNumber}?text=${buildMessage()}`;
+            
+            // Redirect after a short delay so the toast/success screen is seen
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 1000);
+
+            // -------------------------------------watsapp end
             // Notify parent so it can unlock the review section
             if (onSubmitted) onSubmitted();
         } catch (err) {
