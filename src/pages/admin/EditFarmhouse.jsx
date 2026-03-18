@@ -41,6 +41,8 @@ const serializeFacilities = ({ bools, sizes, qtys }) => {
     return arr;
 };
 
+const CITIES = ['Surat', 'Bharuch', 'Ankleshwar', 'Navsari', 'Dang', 'Ahmedabad'];
+
 const EditFarmhouse = () => {
     const { id } = useParams();
     const { t } = useLanguage();
@@ -201,8 +203,16 @@ const EditFarmhouse = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">{t('form_city')} *</label>
-                        <input type="text" value={form.city} onChange={(e) => handleChange('city', e.target.value)}
-                               className={`input-field ${errors.city ? 'border-red-400' : ''}`} />
+                        <select
+                            value={form.city}
+                            onChange={(e) => handleChange('city', e.target.value)}
+                            className={`input-field ${errors.city ? 'border-red-400' : ''}`}
+                        >
+                            <option value="">{t('form_city_placeholder')}</option>
+                            {CITIES.map(city => (
+                                <option key={city} value={city}>{t(`city_${city.toLowerCase()}`)}</option>
+                            ))}
+                        </select>
                         {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
                     </div>
                     <div>
