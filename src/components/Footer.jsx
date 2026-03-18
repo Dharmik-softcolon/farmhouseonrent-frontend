@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import useLanguage from '../hooks/useLanguage';
 import Logo from './Logo';
-import { FiMail, FiPhone, FiInstagram, FiTwitter, FiFacebook, FiYoutube } from 'react-icons/fi';
+import { FiMail, FiPhone, FiInstagram, FiFacebook } from 'react-icons/fi';
 
 const Footer = () => {
     const { t } = useLanguage();
@@ -67,10 +67,8 @@ const Footer = () => {
                         <h3 className="text-white font-semibold mb-4">{t('footer_follow')}</h3>
                         <div className="flex gap-3">
                             {[
-                                { Icon: FiInstagram, href: 'https://instagram.com', color: 'hover:bg-pink-600' },
-                                { Icon: FiFacebook, href: 'https://facebook.com', color: 'hover:bg-blue-600' },
-                                { Icon: FiTwitter, href: 'https://twitter.com', color: 'hover:bg-sky-500' },
-                                { Icon: FiYoutube, href: 'https://youtube.com', color: 'hover:bg-red-600' },
+                                { Icon: FiInstagram, href: 'https://www.instagram.com/farmhouseonrents?igsh=aDhkZmp3a2p5emt5', color: 'hover:bg-pink-600' },
+                                { Icon: FiFacebook, href: 'https://www.facebook.com/share/188d88LfjG', color: 'hover:bg-blue-600' },
                             ].map(({ Icon, href, color }, i) => (
                                 <a
                                     key={i}
@@ -144,8 +142,6 @@ const Footer = () => {
                     {[
                         { Icon: FiInstagram, href: 'https://instagram.com', color: 'hover:bg-pink-600' },
                         { Icon: FiFacebook, href: 'https://facebook.com', color: 'hover:bg-blue-600' },
-                        { Icon: FiTwitter, href: 'https://twitter.com', color: 'hover:bg-sky-500' },
-                        { Icon: FiYoutube, href: 'https://youtube.com', color: 'hover:bg-red-600' },
                     ].map(({ Icon, href, color }, i) => (
                         <a key={i} href={href} target="_blank" rel="noopener noreferrer"
                             className={`w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center ${color} transition-colors`}>

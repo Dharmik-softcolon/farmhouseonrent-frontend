@@ -15,6 +15,7 @@ const Home = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
     const [farmhouses, setFarmhouses] = useState([]);
+    const [totalFarmhouses, setTotalFarmhouses] = useState(0);
     const [cities, setCities] = useState([]);
     const [subLocations, setSubLocations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,6 +42,7 @@ const Home = () => {
                 farmhouseAPI.getCities()
             ]);
             setFarmhouses(fhRes.data.data || []);
+            setTotalFarmhouses(fhRes.data.pagination?.total || 0);
             setCities(cityRes.data.data || []);
         } catch (err) {
             console.error('Failed to load data:', err);
@@ -127,7 +129,7 @@ const Home = () => {
                             rounded-full px-4 py-1.5 mb-4 animate-slide-up">
                                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                                 <span className="text-white/90 text-xs sm:text-sm font-medium">
-                  {farmhouses.length}+ Premium Farmhouses Available
+                  {totalFarmhouses}+ Premium Farmhouses Available
                 </span>
                             </div>
 
@@ -228,7 +230,7 @@ const Home = () => {
                             {/* Stats Row */}
                             <div className="flex items-center gap-5 sm:gap-8">
                                 {[
-                                    { icon: FiHome, value: `${farmhouses.length}+`, label: t('hero_stats_farmhouses') },
+                                    { icon: FiHome, value: `${totalFarmhouses}+`, label: t('hero_stats_farmhouses') },
                                     { icon: FiMapPin, value: `${cities.length}+`, label: t('hero_stats_cities') },
                                     { icon: FiUsers, value: '25+', label: t('hero_stats_guests') },
                                     { icon: FiStar, value: '4.8', label: 'Rating' },
@@ -309,7 +311,7 @@ const Home = () => {
                                 },
                                 {
                                     bg: 'bg-purple-50', iconBg: 'bg-purple-500',
-                                    label: '100+ Premium Farms', sub: 'Across Gujarat & Surat',
+                                    label: `${totalFarmhouses}+ Premium Farms`, sub: 'Across Gujarat & Surat',
                                     icon: (
                                         <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -365,7 +367,7 @@ const Home = () => {
                                 },
                                 {
                                     bg: 'bg-purple-50', iconBg: 'bg-purple-500',
-                                    label: '100+ Premium Farms', sub: 'Across Gujarat & Surat',
+                                    label: `${totalFarmhouses}+ Premium Farms`, sub: 'Across Gujarat & Surat',
                                     icon: (
                                         <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
