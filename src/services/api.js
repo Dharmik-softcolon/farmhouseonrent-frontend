@@ -42,6 +42,7 @@ export const farmhouseAPI = {
 export const bookingAPI = {
     create: (data) => api.post('/bookings', data),
     getAll: (params) => api.get('/bookings', { params }),
+    updateStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
     delete: (id) => api.delete(`/bookings/${id}`),
 };
 

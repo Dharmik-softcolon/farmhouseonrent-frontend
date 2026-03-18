@@ -130,6 +130,7 @@ const Dashboard = () => {
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">Image</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('form_title')}</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('filter_city')}</th>
+                                <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('form_owner_contact')}</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">Rating</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('card_weekday')}</th>
                                 <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('card_weekend')}</th>
@@ -155,6 +156,7 @@ const Dashboard = () => {
                                         </Link>
                                     </td>
                                     <td className="px-5 py-3 text-gray-600">{fh.location?.city}</td>
+                                    <td className="px-5 py-3 text-gray-600 font-medium">{fh.ownerContact || 'N/A'}</td>
                                     <td className="px-5 py-3">
                                         {fh.totalReviews > 0 ? (
                                             <span className="flex items-center gap-1 text-sm">

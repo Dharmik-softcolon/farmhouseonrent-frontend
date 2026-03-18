@@ -77,6 +77,7 @@ const EditFarmhouse = () => {
                 googleMapLink: fh.location?.googleMapLink || '',
                 maxGuests: fh.maxGuests || '',
                 contactNumber: fh.contactNumber || '',
+                ownerContact: fh.ownerContact || '',
             });
             const parsed = parseFacilities(fh.facilities || []);
             setFacBools(parsed.bools);
@@ -115,6 +116,7 @@ const EditFarmhouse = () => {
         if (images.length === 0) errs.images = 'At least one image is required';
         if (!form.maxGuests || Number(form.maxGuests) < 1) errs.maxGuests = 'At least 1 guest';
         if (!/^[6-9]\d{9}$/.test(form.contactNumber)) errs.contactNumber = 'Valid 10-digit mobile required';
+        if (!/^[6-9]\d{9}$/.test(form.ownerContact)) errs.ownerContact = 'Valid 10-digit mobile required';
         setErrors(errs);
         return Object.keys(errs).length === 0;
     };
@@ -145,6 +147,7 @@ const EditFarmhouse = () => {
                 facilities: serializeFacilities({ bools: facBools, sizes: facSizes, qtys: facQtys }),
                 maxGuests: Number(form.maxGuests),
                 contactNumber: form.contactNumber.trim(),
+                ownerContact: form.ownerContact.trim(),
             };
 
             await farmhouseAPI.update(id, payload);
@@ -298,6 +301,13 @@ const EditFarmhouse = () => {
                                onChange={(e) => handleChange('contactNumber', e.target.value.replace(/\D/g, '').slice(0, 10))}
                                className={`input-field ${errors.contactNumber ? 'border-red-400' : ''}`} />
                         {errors.contactNumber && <p className="text-red-500 text-xs mt-1">{errors.contactNumber}</p>}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('form_owner_contact')} *</label>
+                        <input type="text" value={form.ownerContact}
+                               onChange={(e) => handleChange('ownerContact', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                               className={`input-field ${errors.ownerContact ? 'border-red-400' : ''}`} />
+                        {errors.ownerContact && <p className="text-red-500 text-xs mt-1">{errors.ownerContact}</p>}
                     </div>
                 </div>
 

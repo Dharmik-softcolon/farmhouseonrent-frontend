@@ -30,6 +30,16 @@ const BookingLeads = () => {
         }
     };
 
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            const res = await bookingAPI.updateStatus(id, newStatus);
+            setBookings(prev => prev.map(b => b._id === id ? res.data.data : b));
+            toast.success('Status updated');
+        } catch (err) {
+            toast.error('Failed to update status');
+        }
+    };
+
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this booking lead?')) return;
         try {
@@ -83,8 +93,12 @@ const BookingLeads = () => {
 
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div className="flex items-center gap-1 text-gray-600">
-                                        <FiPhone className="w-3 h-3" />
-                                        {b.mobileNumber}
+                                        <FiPhone className="w-3 h-3 text-blue-500" />
+                                        <span className="font-medium">Guest:</span> {b.mobileNumber}
+                                    </div>
+                                    <div className="flex items-center gap-1 text-gray-600">
+                                        <FiPhone className="w-3 h-3 text-green-500" />
+                                        <span className="font-medium">Owner:</span> {b.farmhouseId?.ownerContact || 'N/A'}
                                     </div>
                                     <div className="flex items-center gap-1 text-gray-600">
                                         <FiCalendar className="w-3 h-3" />
@@ -101,15 +115,32 @@ const BookingLeads = () => {
 
                                 <div className="flex gap-2 pt-2">
                                     <a href={`tel:+91${b.mobileNumber}`}
+                                       onClick={() => (b.status || 'Inquiry') === 'Inquiry' && handleStatusChange(b._id, 'Ongoing')}
                                        className="flex-1 flex items-center justify-center gap-1 bg-blue-50 text-blue-600 rounded-lg py-2 text-sm font-medium hover:bg-blue-100 transition-colors">
                                         <FiPhone className="w-3 h-3" />
                                         {t('leads_call')}
                                     </a>
                                     <a href={buildWhatsAppLink(b)} target="_blank" rel="noopener noreferrer"
+                                       onClick={() => (b.status || 'Inquiry') === 'Inquiry' && handleStatusChange(b._id, 'Ongoing')}
                                        className="flex-1 flex items-center justify-center gap-1 bg-green-50 text-green-600 rounded-lg py-2 text-sm font-medium hover:bg-green-100 transition-colors">
                                         <FaWhatsapp className="w-3 h-3" />
                                         {t('leads_whatsapp')}
                                     </a>
+                                </div>
+                                <div className="pt-2">
+                                    <select
+                                        value={b.status || 'Inquiry'}
+                                        onChange={(e) => handleStatusChange(b._id, e.target.value)}
+                                        className={`w-full text-xs font-semibold py-2 px-3 rounded-lg border focus:outline-none transition-colors ${
+                                            (b.status || 'Inquiry') === 'Inquiry' ? 'bg-blue-50 border-blue-100 text-blue-600' :
+                                            b.status === 'Ongoing' ? 'bg-orange-50 border-orange-100 text-orange-600' :
+                                            'bg-green-50 border-green-100 text-green-600'
+                                        }`}
+                                    >
+                                        <option value="Inquiry">{t('status_inquiry')}</option>
+                                        <option value="Ongoing">{t('status_ongoing')}</option>
+                                        <option value="Booked">{t('status_booked')}</option>
+                                    </select>
                                 </div>
 
                                 <p className="text-xs text-gray-400">{t('leads_submitted')}: {new Date(b.createdAt).toLocaleString('en-IN')}</p>
@@ -128,8 +159,9 @@ const BookingLeads = () => {
                                     <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('leads_farmhouse')}</th>
                                     <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('leads_date')}</th>
                                     <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('leads_message')}</th>
-                                    <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('leads_submitted')}</th>
+                                    <th className="text-left px-5 py-3 font-semibold text-gray-600">{t('leads_status')}</th>
                                     <th className="text-right px-5 py-3 font-semibold text-gray-600">{t('leads_actions')}</th>
+                                    <th className="text-right px-5 py-3 font-semibold text-gray-600">{t('leads_owner_contact')}</th>
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -137,17 +169,33 @@ const BookingLeads = () => {
                                     <tr key={b._id} className="hover:bg-gray-50 transition-colors">
                                         <td className="px-5 py-3 font-medium text-gray-900">{b.name}</td>
                                         <td className="px-5 py-3 text-gray-600">{b.mobileNumber}</td>
-                                        <td className="px-5 py-3 text-gray-600 max-w-[180px] truncate">{b.farmhouseId?.title || 'N/A'}</td>
+                                        <td className="px-5 py-3 text-gray-600 max-w-[150px] truncate">{b.farmhouseId?.title || 'N/A'}</td>
                                         <td className="px-5 py-3 text-gray-600">{new Date(b.preferredDate).toLocaleDateString('en-IN')}</td>
-                                        <td className="px-5 py-3 text-gray-500 max-w-[200px] truncate">{b.message || '—'}</td>
-                                        <td className="px-5 py-3 text-gray-400 text-xs">{new Date(b.createdAt).toLocaleDateString('en-IN')}</td>
+                                        <td className="px-5 py-3 text-gray-500 max-w-[150px] truncate">{b.message || '—'}</td>
+                                        <td className="px-5 py-3">
+                                            <select
+                                                value={b.status || 'Inquiry'}
+                                                onChange={(e) => handleStatusChange(b._id, e.target.value)}
+                                                className={`text-xs font-semibold py-1 px-2 rounded-full border focus:outline-none transition-colors ${
+                                                    (b.status || 'Inquiry') === 'Inquiry' ? 'bg-blue-50 border-blue-100 text-blue-600' :
+                                                    b.status === 'Ongoing' ? 'bg-orange-50 border-orange-100 text-orange-600' :
+                                                    'bg-green-50 border-green-100 text-green-600'
+                                                }`}
+                                            >
+                                                <option value="Inquiry">{t('status_inquiry')}</option>
+                                                <option value="Ongoing">{t('status_ongoing')}</option>
+                                                <option value="Booked">{t('status_booked')}</option>
+                                            </select>
+                                        </td>
                                         <td className="px-5 py-3">
                                             <div className="flex items-center justify-end gap-1">
                                                 <a href={`tel:+91${b.mobileNumber}`}
+                                                   onClick={() => (b.status || 'Inquiry') === 'Inquiry' && handleStatusChange(b._id, 'Ongoing')}
                                                    className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 transition-colors" title="Call">
                                                     <FiPhone className="w-4 h-4" />
                                                 </a>
                                                 <a href={buildWhatsAppLink(b)} target="_blank" rel="noopener noreferrer"
+                                                   onClick={() => (b.status || 'Inquiry') === 'Inquiry' && handleStatusChange(b._id, 'Ongoing')}
                                                    className="p-2 rounded-lg text-green-500 hover:bg-green-50 transition-colors" title="WhatsApp">
                                                     <FaWhatsapp className="w-4 h-4" />
                                                 </a>
@@ -156,6 +204,9 @@ const BookingLeads = () => {
                                                     <FiTrash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
+                                        </td>
+                                        <td className="px-5 py-3 text-right text-gray-600 font-medium whitespace-nowrap">
+                                            {b.farmhouseId?.ownerContact || 'N/A'}
                                         </td>
                                     </tr>
                                 ))}
