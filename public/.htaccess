@@ -1,5 +1,16 @@
 RewriteEngine On
 RewriteBase /
+
+# ✅ Allow sitemap.xml to bypass React
+RewriteRule ^sitemap\.xml$ - [L]
+
+# ✅ Allow robots.txt (optional but recommended)
+RewriteRule ^robots\.txt$ - [L]
+
+# ✅ Allow Google verification file
+RewriteRule ^google.*\.html$ - [L]
+
+# React SPA fallback
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
