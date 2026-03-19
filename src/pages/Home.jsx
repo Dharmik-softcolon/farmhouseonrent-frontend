@@ -4,6 +4,7 @@ import useLanguage from '../hooks/useLanguage';
 import { farmhouseAPI } from '../services/api';
 import FarmhouseCard from '../components/FarmhouseCard';
 import Spinner from '../components/Spinner';
+import { Helmet } from 'react-helmet-async';
 import {
     FiSearch, FiMapPin, FiUsers, FiHome, FiArrowRight,
     FiStar, FiChevronDown
@@ -80,7 +81,16 @@ const Home = () => {
     const contentTranslate = Math.min(0, -scrollY * 0.1);
 
     return (
-        <div className="animate-fade-in">
+        <>
+            <Helmet>
+                <title>Farmhouse on Rent in Surat | Book Best Farmhouses</title>
+                <meta
+                    name="description"
+                    content="Find and book the best farmhouse in Surat for parties, weekend stays and events. 25+ premium farmhouses available."
+                />
+            </Helmet>
+
+            <div className="animate-fade-in">
             {/* ══════════════════════════════════════════
           STICKY HERO — FIXED BACKGROUND
          ══════════════════════════════════════════ */}
@@ -691,6 +701,7 @@ const Home = () => {
 
             </div>
         </div>
+            </>
     );
 };
 

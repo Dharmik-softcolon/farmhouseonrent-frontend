@@ -231,6 +231,8 @@ const translations = {
         review_admin_pending: 'Pending',
         review_admin_approve: 'Approve',
         review_admin_unapprove: 'Unapprove',
+    //     --------------------SEO--------------------------
+
     },
 
     hi: {
