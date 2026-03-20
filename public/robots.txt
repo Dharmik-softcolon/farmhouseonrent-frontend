@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+# ── Block admin pages ──
+Disallow: /admin/
+Disallow: /admin/login
+Disallow: /admin/dashboard
+Disallow: /admin/add-farmhouse
+Disallow: /admin/edit-farmhouse/
+Disallow: /admin/bookings
+Disallow: /admin/reviews
+Disallow: /admin/bulk-upload
+
+# ── Block duplicate filter URLs ──
+Disallow: /*?minPrice=
+Disallow: /*?maxPrice=
+Disallow: /*?page=
+Disallow: /*?sort=price_asc
+Disallow: /*?sort=price_desc
+
+# ── Allow important pages ──
+Allow: /farmhouses
+Allow: /farmhouses?city=
+Allow: /farmhouse/
+
+# Crawl delay
+Crawl-delay: 1
+
+# ── Sitemap ──
+Sitemap: https://farmhouseonrent.in/sitemap.xml

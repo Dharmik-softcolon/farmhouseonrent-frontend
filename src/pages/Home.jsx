@@ -83,11 +83,129 @@ const Home = () => {
     return (
         <>
             <Helmet>
-                <title>Farmhouse on Rent in Surat | Book Best Farmhouses</title>
+                {/* ── Primary ── */}
+                <title>Farmhouse on Rent in Surat | Book Best Farmhouses – FarmHouseOnRent</title>
                 <meta
                     name="description"
-                    content="Find and book the best farmhouse in Surat for parties, weekend stays and events. 25+ premium farmhouses available."
+                    content="Find and book the best farmhouse on rent in Surat, Gujarat for parties, weekend getaways, and family events. 25+ verified premium farmhouses. Instant WhatsApp booking available."
                 />
+                <meta
+                    name="keywords"
+                    content="farmhouse on rent surat, farmhouse booking surat, farmhouse for party surat, weekend farmhouse gujarat, farmhouse rental surat, villa on rent surat, farmhouse near surat, best farmhouse surat"
+                />
+                <meta name="robots" content="index, follow" />
+
+                {/* ── Canonical ── */}
+                <link rel="canonical" href="https://farmhouseonrent.in/" />
+
+                {/* ── hreflang ── */}
+                <link rel="alternate" hreflang="en-in" href="https://farmhouseonrent.in/" />
+                <link rel="alternate" hreflang="hi-in" href="https://farmhouseonrent.in/" />
+                <link rel="alternate" hreflang="gu-in" href="https://farmhouseonrent.in/" />
+                <link rel="alternate" hreflang="x-default" href="https://farmhouseonrent.in/" />
+
+                {/* ── Open Graph ── */}
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Farmhouse on Rent in Surat | Book Best Farmhouses" />
+                <meta property="og:description" content="Find and book the best farmhouse on rent in Surat, Gujarat for parties, weekend getaways and family events. 25+ verified premium farmhouses." />
+                <meta property="og:url" content="https://farmhouseonrent.in/" />
+                <meta property="og:image" content="https://farmhouseonrent.in/og-image.jpg" />
+                <meta property="og:image:alt" content="Premium Farmhouses on Rent in Surat Gujarat" />
+                <meta property="og:locale" content="en_IN" />
+
+                {/* ── Twitter ── */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Farmhouse on Rent in Surat | Book Best Farmhouses" />
+                <meta name="twitter:description" content="Find and book the best farmhouse on rent in Surat, Gujarat. 25+ verified premium farmhouses for parties and weekend stays." />
+                <meta name="twitter:image" content="https://farmhouseonrent.in/og-image.jpg" />
+
+                {/* ── Structured Data: Local Business ── */}
+                <script type="application/ld+json">{JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "LocalBusiness",
+                    "@id": "https://farmhouseonrent.in/#localbusiness",
+                    "name": "FarmHouseOnRent",
+                    "description": "Gujarat's premier platform for finding and booking verified farmhouses in Surat, Bharuch, Navsari, and across Gujarat for parties, weekend stays, and family events.",
+                    "url": "https://farmhouseonrent.in",
+                    "telephone": "+91-6356079603",
+                    "email": "dharmikg2208@gmail.com",
+                    "priceRange": "₹₹",
+                    "currenciesAccepted": "INR",
+                    "paymentAccepted": "Cash, UPI, Bank Transfer",
+                    "openingHours": "Mo-Su 00:00-24:00",
+                    "image": "https://farmhouseonrent.in/og-image.jpg",
+                    "logo": "https://farmhouseonrent.in/logo.svg",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": "Surat",
+                        "addressRegion": "Gujarat",
+                        "postalCode": "395001",
+                        "addressCountry": "IN"
+                    },
+                    "geo": {
+                        "@type": "GeoCoordinates",
+                        "latitude": "21.1702",
+                        "longitude": "72.8311"
+                    },
+                    "areaServed": [
+                        { "@type": "City", "name": "Surat" },
+                        { "@type": "City", "name": "Bharuch" },
+                        { "@type": "City", "name": "Navsari" },
+                        { "@type": "City", "name": "Ahmedabad" },
+                        { "@type": "State", "name": "Gujarat" }
+                    ],
+                    "sameAs": [
+                        "https://www.instagram.com/farmhouseonrents",
+                        "https://www.facebook.com/share/188d88LfjG"
+                    ],
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": "4.9",
+                        "reviewCount": "25",
+                        "bestRating": "5",
+                        "worstRating": "1"
+                    }
+                })}</script>
+
+                {/* ── Structured Data: FAQPage ── */}
+                <script type="application/ld+json">{JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": "How do I book a farmhouse in Surat?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Browse our 25+ listed farmhouses, choose your preferred property, fill the booking inquiry form or directly contact us on WhatsApp at +91 6356079603 for instant confirmation."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "What is the price range for farmhouses on rent in Surat?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Farmhouse rental prices in Surat start from ₹3,000 per night on weekdays and ₹5,000 on weekends depending on size, amenities, and location."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Are the farmhouses verified?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Yes, all farmhouses listed on FarmHouseOnRent are personally verified. We ensure photos match the property and all listed amenities are available."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Can I book a farmhouse for a birthday party in Surat?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Absolutely! We have farmhouses perfect for birthday parties, corporate events, family gatherings, and weekend getaways in Surat and nearby areas."
+                            }
+                        }
+                    ]
+                })}</script>
             </Helmet>
 
             <div className="animate-fade-in">
@@ -104,8 +222,9 @@ const Home = () => {
                     >
                         <img
                             src={posterImage}
-                            alt="Farmhouse Hero"
+                            alt="Premium farmhouse on rent in Surat Gujarat with swimming pool and garden"
                             className="w-full h-full object-cover"
+                            fetchpriority="high"
                         />
                     </div>
 
@@ -660,7 +779,12 @@ const Home = () => {
                 {/* ── CTA BANNER ── */}
                 <section className="relative overflow-hidden">
                     <div className="absolute inset-0">
-                        <img src={posterImage} alt="CTA Background" className="w-full h-full object-cover" />
+                        <img
+                            src={posterImage}
+                            alt="Book farmhouse on rent in Surat - FarmHouseOnRent"
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                        />
                         <div className="absolute inset-0 bg-primary-900/80 backdrop-blur-sm" />
                     </div>
 

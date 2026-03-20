@@ -1,16 +1,97 @@
+Options -MultiViews
 RewriteEngine On
 RewriteBase /
 
-# ✅ Allow sitemap.xml to bypass React
-RewriteRule ^sitemap\.xml$ - [L]
+# ══════════════════════════════════════════
+# SECURITY HEADERS
+# ══════════════════════════════════════════
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
 
-# ✅ Allow robots.txt (optional but recommended)
+# ══════════════════════════════════════════
+# FORCE HTTPS
+# ══════════════════════════════════════════
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ══════════════════════════════════════════
+# FORCE NON-WWW (canonical)
+# ══════════════════════════════════════════
+RewriteCond %{HTTP_HOST} ^www\.farmhouseonrent\.in [NC]
+RewriteRule ^(.*)$ https://farmhouseonrent.in/\$1 [L,R=301]
+
+# ══════════════════════════════════════════
+# PROXY SITEMAP.XML TO BACKEND
+# (Hostinger supports mod_proxy)
+# ══════════════════════════════════════════
+<IfModule mod_proxy.c>
+    RewriteRule ^sitemap\.xml$ https://api.farmhouseonrent.in/sitemap.xml [P,L]
+    ProxyPassReverse /sitemap.xml https://api.farmhouseonrent.in/sitemap.xml
+</IfModule>
+
+# ── Fallback if mod_proxy NOT available ──
+# (Redirect instead of proxy - less ideal but works)
+# RewriteRule ^sitemap\.xml$ https://api.farmhouseonrent.in/sitemap.xml [R=302,L]
+
+# ══════════════════════════════════════════
+# STATIC FILES — SERVE DIRECTLY
+# ══════════════════════════════════════════
 RewriteRule ^robots\.txt$ - [L]
-
-# ✅ Allow Google verification file
+RewriteRule ^og-image\.jpg$ - [L]
+RewriteRule ^logo\.svg$ - [L]
+RewriteRule ^favicon\.ico$ - [L]
 RewriteRule ^google.*\.html$ - [L]
 
-# React SPA fallback
+# ══════════════════════════════════════════
+# REACT SPA FALLBACK
+# ══════════════════════════════════════════
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
+
+# ══════════════════════════════════════════
+# GZIP COMPRESSION
+# ══════════════════════════════════════════
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml
+    AddOutputFilterByType DEFLATE text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json application/ld+json
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/woff font/woff2
+</IfModule>
+
+# ══════════════════════════════════════════
+# BROWSER CACHING
+# ══════════════════════════════════════════
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html                  "access plus 1 hour"
+    ExpiresByType text/css                   "access plus 1 year"
+    ExpiresByType application/javascript     "access plus 1 year"
+    ExpiresByType image/jpeg                 "access plus 1 year"
+    ExpiresByType image/png                  "access plus 1 year"
+    ExpiresByType image/webp                 "access plus 1 year"
+    ExpiresByType image/svg+xml              "access plus 1 year"
+    ExpiresByType font/woff2                 "access plus 1 year"
+    ExpiresByType font/woff                  "access plus 1 year"
+</IfModule>
+
+# ══════════════════════════════════════════
+# CACHE CONTROL HEADERS
+# ══════════════════════════════════════════
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|woff2|woff)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
