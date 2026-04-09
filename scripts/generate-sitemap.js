@@ -1,8 +1,12 @@
 // scripts/generate-sitemap.js
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
-const http = require('http');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+import http from 'http';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const SITE_URL = 'https://farmhouseonrent.in';
 const API_URL = 'https://api.farmhouseonrent.in';
@@ -139,7 +143,7 @@ async function generateSitemap() {
                 : today;
 
             xml += buildUrl({
-                loc: `${SITE_URL}/farmhouse/${farm.id}`,
+                loc: `${SITE_URL}/farmhouse/${farm.slug || farm.id}`,
                 lastmod,
                 changefreq: 'weekly',
                 priority: '0.7',
