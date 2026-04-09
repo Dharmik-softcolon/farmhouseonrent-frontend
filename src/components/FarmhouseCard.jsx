@@ -6,13 +6,13 @@ import { FiMapPin, FiUsers, FiArrowRight } from 'react-icons/fi';
 const FarmhouseCard = ({ farmhouse, compact = false }) => {
     const { t } = useLanguage();
     const {
-        _id, title, priceWeekday, priceWeekend, location,
+        _id, slug, title, priceWeekday, priceWeekend, location,
         images, facilities, maxGuests, averageRating, totalReviews
     } = farmhouse;
 
     return (
         <div className="card group cursor-pointer">
-            <Link to={`/farmhouse/${_id}`}>
+            <Link to={`/farmhouse/${slug || _id}`}>
                 {/* Image */}
                 <div className={`relative overflow-hidden ${compact ? 'h-40' : 'h-52 sm:h-56'}`}>
                     <img

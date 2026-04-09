@@ -56,7 +56,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/farmhouses" element={<SearchResults />} />
-                        <Route path="/farmhouse/:id" element={<FarmhouseDetail />} />
+                        <Route path="/farmhouse/:slug" element={<FarmhouseDetail />} />
                         <Route path="/admin/login" element={<Login />} />
                         <Route path="/admin/dashboard" element={
                             <ProtectedRoute><Dashboard /></ProtectedRoute>

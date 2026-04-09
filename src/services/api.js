@@ -31,6 +31,7 @@ export const farmhouseAPI = {
     getAll: (params) => api.get('/farmhouses', { params }),
     getAdminAll: (params) => api.get('/farmhouses/admin/all', { params }),
     getById: (id) => api.get(`/farmhouses/${id}`),
+    getBySlug: (slug) => api.get(`/farmhouses/${slug}`),
     create: (data) => api.post('/farmhouses', data),
     update: (id, data) => api.put(`/farmhouses/${id}`, data),
     delete: (id) => api.delete(`/farmhouses/${id}`),

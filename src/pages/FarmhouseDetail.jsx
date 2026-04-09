@@ -59,7 +59,7 @@ const getFacilitiesText = (facilities) => {
 const SITE_URL = 'https://farmhouseonrent.in';
 
 const FarmhouseDetail = () => {
-    const { id } = useParams();
+    const { slug } = useParams();
     const navigate = useNavigate();
     const { t } = useLanguage();
     const [farmhouse, setFarmhouse] = useState(null);
@@ -68,24 +68,25 @@ const FarmhouseDetail = () => {
     const [error, setError] = useState(null);
     const [reviewKey, setReviewKey] = useState(0);
 
+    // Use the slug as the key for localStorage (consistent across renames)
     const [hasInquired, setHasInquired] = useState(() => {
-        try { return localStorage.getItem(`inquired_${id}`) === 'true'; } catch { return false; }
+        try { return localStorage.getItem(`inquired_${slug}`) === 'true'; } catch { return false; }
     });
 
     useEffect(() => {
         window.scrollTo(0, 0);
         loadFarmhouse();
-    }, [id]);
+    }, [slug]);
 
     const loadFarmhouse = async () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await farmhouseAPI.getById(id);
+            const res = await farmhouseAPI.getBySlug(slug);
             setFarmhouse(res.data.data);
             try {
                 const simRes = await farmhouseAPI.getAll({ city: res.data.data.location?.city, limit: 3 });
-                setSimilar((simRes.data.data || []).filter(f => f._id !== id));
+                setSimilar((simRes.data.data || []).filter(f => f.slug !== slug));
             } catch { /* ignore */ }
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to load farmhouse');
@@ -96,13 +97,13 @@ const FarmhouseDetail = () => {
 
     const handleReviewAdded = useCallback(() => {
         setReviewKey(prev => prev + 1);
-        farmhouseAPI.getById(id).then(res => setFarmhouse(res.data.data)).catch(() => { });
-    }, [id]);
+        farmhouseAPI.getBySlug(slug).then(res => setFarmhouse(res.data.data)).catch(() => { });
+    }, [slug]);
 
     const handleInquirySubmitted = useCallback(() => {
-        try { localStorage.setItem(`inquired_${id}`, 'true'); } catch { /* ignore */ }
+        try { localStorage.setItem(`inquired_${slug}`, 'true'); } catch { /* ignore */ }
         setHasInquired(true);
-    }, [id]);
+    }, [slug]);
 
     // ─── Loading & Error States ───
     if (loading) return <Spinner text={t('common_loading')} />;
@@ -126,12 +127,12 @@ const FarmhouseDetail = () => {
     if (!farmhouse) return null;
 
     const {
-        title, description, priceWeekday, priceWeekend, location, images,
+        _id: farmhouseId, title, description, priceWeekday, priceWeekend, location, images,
         videos, facilities, maxGuests, contactNumber, averageRating, totalReviews
     } = farmhouse;
 
     // ─── SEO Variables ───
-    const pageUrl = `${SITE_URL}/farmhouse/${id}`;
+    const pageUrl = `${SITE_URL}/farmhouse/${farmhouse.slug || slug}`;
     const primaryImage = images?.[0] || `${SITE_URL}/og-image.jpg`;
     const city = location?.city || 'Surat';
     const address = location?.fullAddress || city;
@@ -468,7 +469,7 @@ const FarmhouseDetail = () => {
                             </div>
 
                             {/* Guest Photos */}
-                            <ReviewPhotosGrid key={`photos-${reviewKey}`} farmhouseId={id} />
+                            <ReviewPhotosGrid key={`photos-${reviewKey}`} farmhouseId={farmhouseId} />
 
                             {/* Reviews Section */}
                             <div id="reviews" className="pt-4">
@@ -477,7 +478,7 @@ const FarmhouseDetail = () => {
                                     {t('review_section_title')}
                                 </h2>
 
-                                <ReviewList key={`list-${reviewKey}`} farmhouseId={id} />
+                                <ReviewList key={`list-${reviewKey}`} farmhouseId={farmhouseId} />
 
                                 <div className="mt-8">
                                     {hasInquired ? (

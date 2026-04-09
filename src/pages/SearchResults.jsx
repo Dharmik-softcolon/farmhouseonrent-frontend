@@ -133,7 +133,7 @@ const SearchResults = () => {
         "itemListElement": farmhouses.slice(0, 10).map((fh, index) => ({
             "@type": "ListItem",
             "position": ((page - 1) * 12) + index + 1,
-            "url": `${SITE_URL}/farmhouse/${fh._id}`,
+            "url": `${SITE_URL}/farmhouse/${fh.slug || fh._id}`,
             "name": fh.title,
             "description": fh.description?.substring(0, 100) ||
                 `Farmhouse on rent in ${fh.location?.city}`

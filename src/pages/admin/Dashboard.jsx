@@ -150,7 +150,7 @@ const Dashboard = () => {
                                         />
                                     </td>
                                     <td className="px-5 py-3">
-                                        <Link to={`/farmhouse/${fh._id}`}
+                                        <Link to={`/farmhouse/${fh.slug || fh._id}`}
                                               className="font-medium text-gray-900 hover:text-primary-600 transition-colors">
                                             {fh.title}
                                         </Link>
@@ -192,7 +192,7 @@ const Dashboard = () => {
                                     </td>
                                     <td className="px-5 py-3">
                                         <div className="flex items-center justify-end gap-2">
-                                            <button onClick={() => navigate(`/farmhouse/${fh._id}`)}
+                                            <button onClick={() => navigate(`/farmhouse/${fh.slug || fh._id}`)}
                                                     className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-primary-600 transition-colors" title="View">
                                                 <FiEye className="w-4 h-4" />
                                             </button>

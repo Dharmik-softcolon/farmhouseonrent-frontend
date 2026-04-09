@@ -181,7 +181,7 @@ const ManageReviews = () => {
 
                                     {review.farmhouseId?._id && (
                                         <a
-                                            href={`/farmhouse/${review.farmhouseId._id}#reviews`}
+                                            href={`/farmhouse/${review.farmhouseId.slug || review.farmhouseId._id}#reviews`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1"
